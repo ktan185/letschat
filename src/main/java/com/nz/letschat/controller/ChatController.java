@@ -16,25 +16,25 @@ public class ChatController {
     ChatRepository chatRepository;
 
     @PostMapping("/addChat")
-    public ResponseEntity<?> addChat(@RequestBody Chat chat){
-        if(chatRepository.existsByChatID(chat.getChatID())){
-            return ResponseEntity.badRequest().body("Chat Already Exists Under: "+chat.getChatID());
+    public ResponseEntity<?> addChat(@RequestBody Chat chat) {
+        if (chatRepository.existsByChatID(chat.getChatID())) {
+            return ResponseEntity.badRequest().body("Chat Already Exists Under: " + chat.getChatID());
         }
 
-        try{
+        try {
             chatRepository.save(chat);
             return ResponseEntity.ok(chat);
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/chats")
-    public ResponseEntity<List<Chat>> getAllChats(){
-        try{
-            List<Chat> allChats=chatRepository.findAll();
+    public ResponseEntity<List<Chat>> getAllChats() {
+        try {
+            List<Chat> allChats = chatRepository.findAll();
             return ResponseEntity.ok(allChats);
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
 
