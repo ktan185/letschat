@@ -57,7 +57,8 @@ public class UserController {
             return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body("Username, email or password is incorrect!");
-        };
-        return ResponseEntity.ok().build();
+        }
+        User profile = userService.getUserProfileWithoutPassword(user);
+        return ResponseEntity.ok(profile);
     }
 }

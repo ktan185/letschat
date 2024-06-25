@@ -31,7 +31,7 @@ public class UserService {
   }
 
   public boolean checkPassword(User attemptedLogin) {
-    User existingUserToCheck = doesUserExists(attemptedLogin);
+    User existingUserToCheck = getUserProfile(attemptedLogin);
     String pwdToCheck = attemptedLogin.getPassword();
     
     // If there's no record of the user in our database, return false.
@@ -40,6 +40,27 @@ public class UserService {
     }
     String hashedPwd = existingUserToCheck.getPassword();
     return BCrypt.checkpw(pwdToCheck, hashedPwd);
+  }
+
+  public User getUserProfile(User user) {
+    String userName = stripWhiteSpaceAndLowerCase(user.getUserName()); 
+    String userEmail = stripWhiteSpaceAndLowerCase(user.getEmail());
+    User curUser = null;
+    // we allow users to login with either email or username, thus one field of 
+    // The payload will be null and we decide how to query based on present field.
+    if (userName == null) {
+      curUser = userRepository.findUserByEmail(userEmail);
+    } else if (userEmail == null) {
+      curUser = userRepository.findUserByUserName(userName);
+    }
+    return curUser;
+  }
+
+  public User getUserProfileWithoutPassword(User user) {
+    User curUser = getUserProfile(user);
+    User clientProfile = curUser.clone();
+    clientProfile.setPassword(null);
+    return clientProfile;
   }
 
   public boolean checkUniqueUserNameAndEmail(User user) {
@@ -64,19 +85,5 @@ public class UserService {
       return null;
     }
     return s.trim().toLowerCase();
-  }
-
-  private User doesUserExists(User user) {
-    String userName = stripWhiteSpaceAndLowerCase(user.getUserName()); 
-    String userEmail = stripWhiteSpaceAndLowerCase(user.getEmail());
-    User curUser = null;
-    // we allow users to login with either email or username, thus one field of 
-    // The payload will be null and we decide how to query based on present field.
-    if (userName == null) {
-      curUser = userRepository.findUserByEmail(userEmail);
-    } else if (userEmail == null) {
-      curUser = userRepository.findUserByUserName(userName);
-    }
-    return curUser;
   }
 }
