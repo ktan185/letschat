@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
 body {
   background-image: url('./landing.gif');
   background-repeat: no-repeat;
@@ -7,4 +9,21 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+.titleContainer {
+  color: white;
+  font-size: 10vh;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.title {
+  margin-top: 20px;
+  padding: 0px;
+  text-shadow: 2px 2px 100px rgba(227, 12, 255, 0.5);
+  font-family: 'Pixelify Sans', sans-serif;
 }
