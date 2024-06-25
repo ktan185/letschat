@@ -16,10 +16,11 @@ public class ChatController {
     ChatRepository chatRepository;
 
     @PostMapping("/addChat")
-    public ResponseEntity<Chat> addChat(@RequestBody Chat chat){
-        if(chatRepository.findChatByChatIDExists(chat.getChatID().getOwnerEmailAddress(), chat.getChatID().getUniqueChatID())){
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> addChat(@RequestBody Chat chat){
+        if(chatRepository.existsByChatID(chat.getChatID())){
+            return ResponseEntity.badRequest().body("Chat Already Exists Under: "+chat.getChatID());
         }
+
         try{
             chatRepository.save(chat);
             return ResponseEntity.ok(chat);

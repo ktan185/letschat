@@ -5,8 +5,9 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.nz.letschat.model.Chat;
+import com.nz.letschat.model.Chat.ChatID;
 
 public interface ChatRepository extends MongoRepository<Chat,String>{
     public List<Chat> findAll();
-    public boolean findChatByChatIDExists(String ownerEmailAddress,String uniqueChatID);
+    public boolean existsByChatID(ChatID chatID);
 }
