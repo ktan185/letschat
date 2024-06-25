@@ -1,7 +1,9 @@
 package com.nz.letschat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,14 +20,16 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     public ResponseEntity createUser(@RequestBody User newUser) {
 
         // format userName and email first 
         userService.formatUserInfo(newUser);
         // Then check to see if the userName and email is unique
         if (!userService.checkUniqueUserNameAndEmail(newUser)) {
-            return ResponseEntity.status(500).build();
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Username or email has been taken!");
         }
 
         try {
@@ -39,4 +43,21 @@ public class UserController {
         
     }
 
+    /**
+     * 
+     * @param user is a payload containing either the submitted (email, password) 
+     * or (userName, password) as we will allow users to login to the application 
+     * with either their username or email. Given this, one of the fields will be
+     * null! - this will be validated in doesUserExist().
+     * @return status 200 if successful login occured.
+     */ 
+    @GetMapping("/signIn")
+    public ResponseEntity signUserIn(@RequestBody User user) {
+        if (!userService.checkPassword(user)) {
+            return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("Username, email or password is incorrect!");
+        };
+        return ResponseEntity.ok().build();
+    }
 }
