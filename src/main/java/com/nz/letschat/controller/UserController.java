@@ -21,7 +21,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/signUp")
-    public ResponseEntity createUser(@RequestBody User newUser) {
+    public ResponseEntity<?> createUser(@RequestBody User newUser) {
 
         // format userName and email first 
         userService.formatUserInfo(newUser);
@@ -52,7 +52,7 @@ public class UserController {
      * @return status 200 if successful login occured.
      */ 
     @GetMapping("/signIn")
-    public ResponseEntity signUserIn(@RequestBody User user) {
+    public ResponseEntity<?> signUserIn(@RequestBody User user) {
         if (!userService.checkPassword(user)) {
             return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
