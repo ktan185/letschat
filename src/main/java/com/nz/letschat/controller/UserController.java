@@ -20,10 +20,30 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    /**
+     * 
+     * @param newUser is the payload from frontend client which needs to
+     * be validated before we can accept the sign up. This includes ensuring
+     * that the username and email are unique, lowercased and stripped of 
+     * white space, as well that the email address is valid.
+     * @return status 200 if a sign up is successful.
+     */
     @PostMapping("/signUp")
-    public ResponseEntity createUser(@RequestBody User newUser) {
+    public ResponseEntity<?> createUser(@RequestBody User newUser) {
 
-        // format userName and email first 
+        if (!userService.validateUserDetails(newUser)) {
+            return ResponseEntity
+            .status(HttpStatus.NOT_ACCEPTABLE)
+            .body("One of the form fields is missing!");
+        }
+
+        if (!userService.checkValidEmailAddress(newUser)) {
+            return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .body("Email address is invalid!");
+        }
+
+        // format userName and email. 
         userService.formatUserInfo(newUser);
         // Then check to see if the userName and email is unique
         if (!userService.checkUniqueUserNameAndEmail(newUser)) {
@@ -36,11 +56,10 @@ public class UserController {
             // encrypt user password before storing.
             userService.createEncryptedUser(newUser);
             userRepository.save(newUser);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("You have successfully signed up!");
         } catch (Exception e) {
            return ResponseEntity.badRequest().build(); 
         }
-        
     }
 
     /**
@@ -52,7 +71,7 @@ public class UserController {
      * @return status 200 if successful login occured.
      */ 
     @GetMapping("/signIn")
-    public ResponseEntity signUserIn(@RequestBody User user) {
+    public ResponseEntity<?> signUserIn(@RequestBody User user) {
         if (!userService.checkPassword(user)) {
             return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)

@@ -1,11 +1,13 @@
 package com.nz.letschat.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import com.nz.letschat.Utils.EmailValidator;
 import com.nz.letschat.model.User;
 import com.nz.letschat.repository.UserRepository;
 
@@ -55,12 +57,23 @@ public class UserService {
     }
     return curUser;
   }
-
+  
   public User getUserProfileWithoutPassword(User user) {
     User curUser = getUserProfile(user);
     User clientProfile = curUser.clone();
     clientProfile.setPassword(null);
     return clientProfile;
+  }
+
+  public boolean validateUserDetails(User user) {
+    List<String> userFields = Arrays.asList(
+      user.getEmail(),
+      user.getFirstName(),
+      user.getLastName(),
+      user.getPassword(),
+      user.getUserName() 
+    );
+    return userFields.stream().allMatch(field -> field != null);
   }
 
   public boolean checkUniqueUserNameAndEmail(User user) {
@@ -69,10 +82,16 @@ public class UserService {
     List<User> existingUsers = userRepository.findAll();
     // Check that the current email or username has not been taken.
     return existingUsers.parallelStream().noneMatch(existingUser -> 
-      existingUser.getEmail().equals(curEmail) || existingUser.getUserName().equals(curUserName)
+      existingUser.getEmail().equals(curEmail) 
+      || existingUser.getUserName().equals(curUserName)
     );
   }
 
+  public boolean checkValidEmailAddress(User user) {
+    String emailToCheck = user.getEmail();
+    return EmailValidator.isEmailValid(emailToCheck);
+  }
+    
   private String encryptPassword(User user) {
     String curPwd = user.getPassword();
     String salt = BCrypt.gensalt(10);
