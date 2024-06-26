@@ -70,7 +70,7 @@ public class UserController {
      * null! - this will be validated in doesUserExist().
      * @return status 200 if successful login occured.
      */ 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public ResponseEntity<?> signUserIn(@RequestBody User user) {
         if (!userService.checkPassword(user)) {
             return ResponseEntity

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
+import { validateEmail } from './utils/login'
+import { signIn } from '../../service/authService'
 
 function LoginForm() {
   const [userName, setUserName] = useState('')
@@ -9,8 +11,16 @@ function LoginForm() {
 
   const handleSignIn = (e) => {
     e.preventDefault()
-    // Api call placeholder
-    console.log({ userName, password })
+    const payload = validateEmail(userName)
+      ? { email: userName, password: password }
+      : { userName: userName, password: password }
+
+    try {
+      console.log(payload)
+      signIn(payload)
+    } catch (err) {
+      console.err(err)
+    }
   }
 
   const handleUserNameChange = (e) => {
