@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+body {
+  background-image: url('./landing.gif');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.container {
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: 0px;
+}
+
+.title {
+  font-size: 10vh;
+  margin-top: 20px;
+  padding: 0px;
+  text-shadow: 2px 2px 100px rgba(227, 12, 255, 0.5);
+  font-family: 'Pixelify Sans', sans-serif;
+}
+
+.signInContainer {
+  margin-top: 15vh;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
