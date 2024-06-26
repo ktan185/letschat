@@ -1,10 +1,15 @@
+import LoginForm from '../../components/login/loginComponents'
 import styles from './landing.module.css'
+import authService from '../../service/authService.js'
 
 function Landing() {
   return (
     <div className={styles.body}>
-      <div className={styles.titleContainer}>
+      <div className={styles.container}>
         <h1 className={styles.title}>Lets Chat!</h1>
+        <div className={styles.signInContainer}>
+          <LoginForm />
+        </div>
       </div>
     </div>
   )

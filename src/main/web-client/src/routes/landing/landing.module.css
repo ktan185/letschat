@@ -11,19 +11,28 @@ body {
   background-size: cover;
 }
 
-.titleContainer {
+.container {
   color: white;
-  font-size: 10vh;
   text-align: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
   height: 100%;
+  padding: 0px;
 }
 
 .title {
+  font-size: 10vh;
   margin-top: 20px;
   padding: 0px;
   text-shadow: 2px 2px 100px rgba(227, 12, 255, 0.5);
   font-family: 'Pixelify Sans', sans-serif;
+}
+
+.signInContainer {
+  margin-top: 15vh;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
