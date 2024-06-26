@@ -14,12 +14,14 @@
     "react-bootstrap": "^2.10.3",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.0",
-    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build-web-client && npm run move-files",
+    "build-web-client": "react-scripts build",
+    "clean": "rimraf ../resources/static/*",
+    "move-files": "shx mv ./build/* ../resources/static/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -40,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-scripts": "^5.0.1",
+    "rimraf": "^5.0.7",
+    "shx": "^0.3.4"
   }
 }
