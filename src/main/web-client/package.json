@@ -18,9 +18,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npm run build-web-client && npm run move-files",
+    "build": "npm run clean && npm run build-web-client && mkdirp ../resources/static && npm run move-files",
     "build-web-client": "react-scripts build",
-    "clean": "rimraf ../resources/static/*",
+    "clean": "rimraf ../resources/static/",
     "move-files": "shx mv ./build/* ../resources/static/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
