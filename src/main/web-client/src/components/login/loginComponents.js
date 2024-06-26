@@ -3,23 +3,25 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import { validateEmail } from './utils/login'
-import { signIn } from '../../service/authService'
+import { signIn } from '../../services/authService'
+import { useSession } from '../../contexts/SessionContext'
 
 function LoginForm() {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const { session, updateSession } = useSession()
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault()
     const payload = validateEmail(userName)
       ? { email: userName, password: password }
       : { userName: userName, password: password }
 
     try {
-      console.log(payload)
-      signIn(payload)
+      const res = await signIn(payload)
+      updateSession(res.data)
     } catch (err) {
-      console.err(err)
+      console.error(err)
     }
   }
 

@@ -67,8 +67,8 @@ public class UserController {
      * @param user is a payload containing either the submitted (email, password) 
      * or (userName, password) as we will allow users to login to the application 
      * with either their username or email. Given this, one of the fields will be
-     * null! - this will be validated in doesUserExist().
-     * @return status 200 if successful login occured.
+     * null! - this will be validated in checkPassword().
+     * @return user's profile if successful login occured.
      */ 
     @PostMapping("/signIn")
     public ResponseEntity<?> signUserIn(@RequestBody User user) {
