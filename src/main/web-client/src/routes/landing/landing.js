@@ -1,6 +1,5 @@
 import LoginForm from '../../components/login/loginComponents'
 import styles from './landing.module.css'
-import authService from '../../services/authService.js'
 
 function Landing() {
   return (
