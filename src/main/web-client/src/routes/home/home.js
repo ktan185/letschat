@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import styles from './home.module.css'
 import { getChats } from '../../services/chatService'
-import { isLoggedIn, useSession } from '../../contexts/SessionContext'
-import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthProvider'
 
 function Home() {
   const [chats, setChats] = useState([])
-  const { session } = useSession()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!isLoggedIn(session)) {
-      navigate('/')
-    }
-  }, [session, navigate])
+  // To get a users metadata use useAuth()
+  // Delete this later
+  const auth = useAuth()
+  console.log(auth.user)
 
   useEffect(() => {
     const fetchChats = async () => {

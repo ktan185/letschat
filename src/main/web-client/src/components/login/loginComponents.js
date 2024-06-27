@@ -3,15 +3,13 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import { validateEmail } from './utils/login'
-import { signIn, signUp } from '../../services/authService'
-import { useSession } from '../../contexts/SessionContext'
-import { useNavigate } from 'react-router-dom'
+import { signUp } from '../../services/authService'
+import { useAuth } from '../../contexts/AuthProvider'
 
 export function LoginForm() {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-  const { updateSession } = useSession()
-  const navigate = useNavigate()
+  const auth = useAuth()
 
   const handleSignIn = async (e) => {
     e.preventDefault()
@@ -20,9 +18,9 @@ export function LoginForm() {
       : { userName: userName, password: password }
 
     try {
-      const res = await signIn(payload)
-      updateSession(res.data)
-      navigate('/home')
+      console.log(payload)
+      // call login API to attempt to sign in
+      auth.loginAction(payload)
     } catch (err) {
       alert('The login details you provided are incorrect!')
     }
