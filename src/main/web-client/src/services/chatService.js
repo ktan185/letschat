@@ -11,3 +11,12 @@ export const getChats = async () => {
       return [];
     }
   }
+export const getChat=async ({ownerEmailAddress,uniqueChatID}) =>{
+  try{
+    const response= await axios.get(`${SERVER_PORT}/chat?ownerEmailAddress=${ownerEmailAddress}&uniqueChatID=${uniqueChatID}`)
+    return response.data
+  }catch(error){
+    console.error("Error fetching chats:", error);
+    return null
+  }
+}
