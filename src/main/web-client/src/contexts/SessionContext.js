@@ -20,3 +20,7 @@ export const SessionProvider = ({ children }) => {
 export const useSession = () => {
   return useContext(SessionContext)
 }
+
+export function isLoggedIn(obj) {
+  return !(Object.keys(obj).length === 0 && obj.constructor === Object)
+}
