@@ -6,7 +6,7 @@ import { useState } from 'react'
 function Landing() {
   const [isSignUpCard, setSignUp] = useState(false)
 
-  const toggleSignUp = (e) => {
+  const toggleSignUp = () => {
     setSignUp(!isSignUpCard)
   }
 
@@ -17,7 +17,7 @@ function Landing() {
         <div className={styles.signInContainer}>
           {isSignUpCard ? (
             <>
-              <SignUpForm />
+              <SignUpForm toggleSignUp={toggleSignUp} />
               <a>Have an account? </a>
             </>
           ) : (
