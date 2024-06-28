@@ -4,11 +4,13 @@ import SockJS from 'sockjs-client'
 import { useState, useEffect } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
-import { ChatMessages } from '../../components/chat/chatComponents'
+import { ChatBox, ChatMessages } from '../../components/chat/chatComponents'
 import Button from 'react-bootstrap/esm/Button'
+import { getChat } from '../../services/chatService'
 
 export function ChatRoom() {
   let [searchParams] = useSearchParams()
+  const [chatRoom, setChatRoom] = useState(null)
   const auth = useAuth()
   const user = auth.getUserDetails()
   const ownerToken = searchParams.get('ownerToken')
@@ -16,6 +18,15 @@ export function ChatRoom() {
   const SERVER = 'http://localhost:8080'
   const [messages, setMessages] = useState([])
   const [stompClient, setStompClient] = useState(null)
+
+  useEffect(() => {
+    const fetchChatRoom = async () => {
+      const res = await getChat(ownerToken, uniqueChatID)
+      setChatRoom(res)
+      console.log('This is the chatRoom metadata: ', res)
+    }
+    fetchChatRoom()
+  }, [])
 
   useEffect(() => {
     const socket = new SockJS(`${SERVER}/chat`)
@@ -46,10 +57,6 @@ export function ChatRoom() {
     }
   }, [ownerToken, uniqueChatID])
 
-  useEffect(() => {
-    console.log('Here are the messsages in this chat: ', messages)
-  }, [messages])
-
   function sendMessage() {
     const username = user.userName
     if (stompClient && stompClient.connected) {
@@ -58,7 +65,6 @@ export function ChatRoom() {
         {},
         JSON.stringify({
           from: username,
-          // This is the payload that we send to our api
           text: 'Testing what happens',
           ownerToken: ownerToken,
           uniqueChatID: uniqueChatID,
@@ -74,15 +80,7 @@ export function ChatRoom() {
       <div className={styles.container}>
         Welcome the owner of this chat is {ownerToken} and the uniqueChatID is{' '}
         {uniqueChatID}
-        <ChatMessages messages={messages} />
-        <Button
-          size="sm"
-          variant="sucess"
-          className={styles.button}
-          onClick={sendMessage}
-        >
-          CLICK TO SEND DEMO WEBSOCKET
-        </Button>
+        <ChatBox chatRoom={chatRoom} send={sendMessage} />
       </div>
     </>
   )

@@ -134,16 +134,32 @@ export function ChatMessages({ messages }) {
   )
 }
 
-export function chatBox() {
+export function ChatBox({ chatRoom, send }) {
+  const [message, setMessage] = useState('')
+
+  const handleMessageChange = (e) => {
+    e.preventDefault()
+    setMessage(e.target.value)
+  }
+
   return (
     <Card>
-      <Card.Header>Featured</Card.Header>
+      <Card.Header>Root title goes here chat.chatName</Card.Header>
       <Card.Body>
-        <Card.Title>Special title treatment</Card.Title>
-        <Card.Text>
-          With supporting text below as a natural lead-in to additional content.
-        </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
+        <ChatMessages messages={chatRoom?.messages} />
+        <Form.Control
+          type="text"
+          value={message}
+          onChange={handleMessageChange}
+        />
+        <Button
+          size="sm"
+          variant="sucess"
+          className={styles.button}
+          onClick={send}
+        >
+          Send
+        </Button>
       </Card.Body>
     </Card>
   )
