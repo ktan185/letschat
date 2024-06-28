@@ -1,24 +1,9 @@
-import { useSearchParams } from 'react-router-dom'
-import styles from './chatroom.module.css'
 import { createChat } from '../../services/chatService'
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-
-export function ChatRoom() {
-  const { searchParams } = useSearchParams()
-  const ownerToken = searchParams.get('ownerToken')
-  const uniqueChatID = searchParams.get('uniqueChatID')
-
-  return (
-    <div className={styles.container}>
-      Welcome the owner of this chat is {ownerToken} and the uniqueChatID is{' '}
-      {uniqueChatID}
-    </div>
-  )
-}
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
@@ -80,5 +65,5 @@ export function CreateChat(props) {
 }
 
 export function getChatUrl(chat) {
-  return `/chat?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`
+  return `/chatroom?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`
 }
