@@ -6,9 +6,15 @@ import { useNavigate } from 'react-router-dom'
 
 function Home() {
   const [chats, setChats] = useState([])
-  // To get a users metadata use useAuth()
+
+  // This is how you get the user's infor
   const auth = useAuth()
+
   const navigate=useNavigate()
+
+  const user = auth.getUserDetails()
+  console.log(user)
+
 
   useEffect(() => {
     const fetchChats = async () => {
