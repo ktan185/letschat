@@ -1,6 +1,7 @@
 .listGroupItem {
   text-align: left;
   border-radius: 5px;
+  margin-bottom: 2px;
 }
 
 .time {
@@ -30,4 +31,8 @@
 
 .cardContainer {
   height: 80vh;
+}
+
+.chatName {
+  text-align: left;
 }
