@@ -4,6 +4,7 @@ import Home from './routes/home/home'
 import { ChatRoom } from './routes/chatroom/chatroom'
 import AuthProvider from './contexts/AuthProvider'
 import PrivateRoute from './routes/common/private'
+import NavBar from './components/nav/navbar'
 
 function App() {
   return (

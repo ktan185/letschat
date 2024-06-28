@@ -10,10 +10,11 @@
 }
 
 .chats {
+  margin-top: 15px;
   text-align: center;
   border: rgb(255, 255, 255) solid 3px;
   background-color: blue;
-  width: 50%;
+  width: 55%;
   cursor: pointer;
   border-radius: 15px;
 }
