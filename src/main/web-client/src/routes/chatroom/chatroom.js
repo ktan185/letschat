@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
 import { ChatMessages } from '../../components/chat/chatComponents'
+import Button from 'react-bootstrap/esm/Button'
 
 export function ChatRoom() {
   let [searchParams] = useSearchParams()
@@ -74,9 +75,14 @@ export function ChatRoom() {
         Welcome the owner of this chat is {ownerToken} and the uniqueChatID is{' '}
         {uniqueChatID}
         <ChatMessages messages={messages} />
-        <button className={styles.button} onClick={sendMessage}>
+        <Button
+          size="sm"
+          variant="sucess"
+          className={styles.button}
+          onClick={sendMessage}
+        >
           CLICK TO SEND DEMO WEBSOCKET
-        </button>
+        </Button>
       </div>
     </>
   )

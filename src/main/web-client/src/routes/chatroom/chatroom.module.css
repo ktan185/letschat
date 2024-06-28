@@ -13,8 +13,3 @@
   width: 300px;
   height: 100px;
 }
-
-.scrollableList {
-  max-height: 300px;
-  overflow-y: auto;
-}

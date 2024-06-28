@@ -1,5 +1,5 @@
 import { createChat } from '../../services/chatService'
-import { useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
@@ -72,7 +72,7 @@ export function getChatUrl(chat) {
   return `/chatroom?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`
 }
 
-export function ChatRoomList({ chats: chatlist }) {
+export function ChatRoomList({ chatlist }) {
   const navigate = useNavigate()
   return (
     <>
@@ -104,9 +104,16 @@ export function ChatRoomList({ chats: chatlist }) {
 }
 
 export function ChatMessages({ messages }) {
-  console.log('Inside the component', messages)
+  const listRef = useRef(null)
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight
+    }
+  }, [messages])
+
   return (
-    <ListGroup className={styles.scrollableList}>
+    <ListGroup className={styles.scrollableList} ref={listRef}>
       {messages?.length > 0 ? (
         messages.map((chat, index) => (
           <ListGroup.Item
@@ -117,13 +124,11 @@ export function ChatMessages({ messages }) {
               <div className="fw-bold">{chat.from}</div>
               {chat.text}
             </div>
-            <Badge bg="dark" pill>
-              {chat.time}
-            </Badge>
+            <Badge className={styles.time}>{`Sent at ${chat.time}`}</Badge>
           </ListGroup.Item>
         ))
       ) : (
-        <p>Begin chatting!</p>
+        <p className={styles.default}>Begin chatting!</p>
       )}
     </ListGroup>
   )
