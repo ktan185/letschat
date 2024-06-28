@@ -1,13 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
-import styles from './chat.module.css'
-import Button from 'react-bootstrap/Button'
-import Modal from 'react-bootstrap/Modal'
-import Form from 'react-bootstrap/Form'
-import { useState } from 'react'
-import { useAuth } from '../../contexts/AuthProvider'
-import { createChat } from '../../services/chatService'
+import styles from './chatroom.module.css'
 
-export function Chat() {
+export function ChatRoom() {
   const { searchParams } = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
