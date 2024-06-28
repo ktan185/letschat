@@ -24,9 +24,9 @@ function Home() {
       <div className={styles.chats}>
         <CreateChat show={showModal} onHide={() => setShowModal(false)} />
         <Button variant="primary" onClick={() => setShowModal(true)}>
-          Launch vertically centered modal
+          Create new chat!
         </Button>
-        {chats.length > 0 ? (
+        {chats?.length > 0 ? (
           chats.map((chat) => {
             return (
               <div

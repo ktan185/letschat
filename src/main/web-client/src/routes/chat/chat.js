@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import { useState } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
+import { createChat } from '../../services/chatService'
 
 export function Chat() {
   const { searchParams } = useSearchParams()
@@ -23,15 +24,23 @@ export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
   const auth = useAuth()
   const user = auth.getUserDetails()
-  
+
   const handleChatNameChange = (e) => {
     setChatName(e.target.value)
   }
 
-  function createChat(e) {
+  function createNewChat(e) {
     e.preventDefault()
     try {
-    
+      const payload = {
+        userToken: user.token,
+        chatName: chatName,
+      }
+      createChat(payload)
+      props.onHide(true)
+      alert('You have sucessfully created a new chat!')
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -53,7 +62,7 @@ export function CreateChat(props) {
             <Form.Label>Enter a chatroom name</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter the name for your chatroom"
+              placeholder="Chat room name"
               value={chatName}
               onChange={handleChatNameChange}
             />
@@ -61,7 +70,10 @@ export function CreateChat(props) {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
+        <Button variant="secondary" onClick={props.onHide}>
+          Cancel
+        </Button>
+        <Button onClick={createNewChat}>Create Chat!</Button>
       </Modal.Footer>
     </Modal>
   )
