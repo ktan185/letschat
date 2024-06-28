@@ -49,7 +49,7 @@ export function ChatRoom() {
     function sendMessage() {
         const username = user.userName
         if (stompClient && stompClient.connected) {
-            stompClient.send("/app/chat", {}, JSON.stringify({ 'from': username, 'text': ' ', 'chatID': `${ownerToken}${uniqueChatID}` }));
+            stompClient.send("/app/chat", {}, JSON.stringify({ 'from': username, 'text': ' ', 'ownerToken': `${ownerToken}`,'uniqueChatID':`${uniqueChatID}` }));
         } else {
             console.error("Stomp client is not connected");
         }
