@@ -4,6 +4,10 @@ import { useAuth } from '../../contexts/AuthProvider'
 import Modal from 'react-bootstrap/Modal'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Badge from 'react-bootstrap/Badge'
+import ListGroup from 'react-bootstrap/ListGroup'
+import styles from './chat.module.css'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
@@ -66,4 +70,35 @@ export function CreateChat(props) {
 
 export function getChatUrl(chat) {
   return `/chatroom?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`
+}
+
+export function ChatList({ chats }) {
+  const navigate = useNavigate()
+  return (
+    <>
+      {chats?.length > 0 ? (
+        <ListGroup>
+          {chats.map((chat, index) => (
+            <ListGroup.Item
+              as="li"
+              className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
+              key={index}
+              action
+              onClick={() => navigate(getChatUrl(chat))}
+            >
+              <div className="ms-2 me-auto">
+                <div className="fw-bold">{chat.chatName}</div>
+                description
+              </div>
+              <Badge bg="primary" pill>
+                users chatting: 420
+              </Badge>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      ) : (
+        <h2>No Chats Available</h2>
+      )}
+    </>
+  )
 }
