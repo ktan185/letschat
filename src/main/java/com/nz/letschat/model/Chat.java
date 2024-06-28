@@ -2,11 +2,12 @@ package com.nz.letschat.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 @Document
 @Data
@@ -18,6 +19,7 @@ public class Chat {
         this.chatName = chatName;
         String uuid = UUID.randomUUID().toString();
         this.setChatID(new ChatID(userToken, uuid.substring(uuid.length() - 10))); 
+        this.chatMessages=new ArrayList<Message>();
     }
 
     @Id
@@ -25,7 +27,7 @@ public class Chat {
 
     String chatName;
 
-    Message[] chatMessages;
+    List<Message> chatMessages;
 
     @Data
     @AllArgsConstructor
