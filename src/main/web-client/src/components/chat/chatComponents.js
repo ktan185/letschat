@@ -68,7 +68,7 @@ export function CreateChat(props) {
   )
 }
 
-export function getChatUrl(chat) {
+function getChatUrl(chat) {
   return `/chatroom?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`
 }
 
@@ -103,7 +103,7 @@ export function ChatRoomList({ chatlist }) {
   )
 }
 
-export function ChatMessages({ messages }) {
+function ChatMessages({ messages }) {
   const listRef = useRef(null)
 
   useEffect(() => {
@@ -134,7 +134,7 @@ export function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ chatRoom, send }) {
+export function ChatBox({ chatRoom, send, messages }) {
   const [message, setMessage] = useState('')
 
   const handleMessageChange = (e) => {
@@ -143,24 +143,28 @@ export function ChatBox({ chatRoom, send }) {
   }
 
   return (
-    <Card>
-      <Card.Header>Root title goes here chat.chatName</Card.Header>
-      <Card.Body>
-        <ChatMessages messages={chatRoom?.messages} />
-        <Form.Control
-          type="text"
-          value={message}
-          onChange={handleMessageChange}
-        />
-        <Button
-          size="sm"
-          variant="sucess"
-          className={styles.button}
-          onClick={send}
-        >
-          Send
-        </Button>
-      </Card.Body>
-    </Card>
+    <div className={styles.cardContainer}>
+      <Card>
+        <Card.Header>{chatRoom?.chatName}</Card.Header>
+        <Card.Body>
+          <ChatMessages messages={messages} />
+          <div className={styles.input}>
+            <Form.Control
+              type="text"
+              value={message}
+              onChange={handleMessageChange}
+            />
+            <Button
+              size="sm"
+              variant="sucess"
+              className={styles.button}
+              onClick={send}
+            >
+              Send
+            </Button>
+          </div>
+        </Card.Body>
+      </Card>
+    </div>
   )
 }

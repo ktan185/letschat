@@ -4,8 +4,7 @@ import SockJS from 'sockjs-client'
 import { useState, useEffect } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
-import { ChatBox, ChatMessages } from '../../components/chat/chatComponents'
-import Button from 'react-bootstrap/esm/Button'
+import { ChatBox } from '../../components/chat/chatComponents'
 import { getChat } from '../../services/chatService'
 
 export function ChatRoom() {
@@ -80,7 +79,7 @@ export function ChatRoom() {
       <div className={styles.container}>
         Welcome the owner of this chat is {ownerToken} and the uniqueChatID is{' '}
         {uniqueChatID}
-        <ChatBox chatRoom={chatRoom} send={sendMessage} />
+        <ChatBox chatRoom={chatRoom} send={sendMessage} messages={messages} />
       </div>
     </>
   )
