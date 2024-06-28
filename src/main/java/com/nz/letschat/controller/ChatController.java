@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import com.nz.letschat.model.Chat;
@@ -15,13 +16,11 @@ public class ChatController {
     @Autowired
     ChatRepository chatRepository;
 
-    @PostMapping("/addChat")
-    public ResponseEntity<?> addChat(@RequestBody Chat chat) {
-        if (chatRepository.existsByChatID(chat.getChatID())) {
-            return ResponseEntity.badRequest().body("Chat Already Exists Under: " + chat.getChatID());
-        }
+    @PostMapping("/api/addChat")
+    public ResponseEntity<?> addChat(@RequestBody String chatName, @RequestParam String userToken) {
 
         try {
+            Chat chat = new Chat(chatName, userToken);
             chatRepository.save(chat);
             return ResponseEntity.ok(chat);
         } catch (Exception e) {
@@ -29,7 +28,7 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/chats")
+    @GetMapping("/api/getAllChats")
     public ResponseEntity<List<Chat>> getAllChats() {
         try {
             List<Chat> allChats = chatRepository.findAll();

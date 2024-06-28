@@ -27,7 +27,7 @@ public class UserController {
      * white space, as well that the email address is valid.
      * @return status 200 if a sign up is successful.
      */
-    @PostMapping("/signUp")
+    @PostMapping("/api/signUp")
     public ResponseEntity<?> createUser(@RequestBody User newUser) {
 
         if (!userService.validateUserDetails(newUser)) {
@@ -69,7 +69,7 @@ public class UserController {
      * null! - this will be validated in checkPassword().
      * @return user's profile if successful login occured.
      */ 
-    @PostMapping("/signIn")
+    @PostMapping("/api/signIn")
     public ResponseEntity<?> signUserIn(@RequestBody User user) {
         if (!userService.checkPassword(user)) {
             return ResponseEntity
