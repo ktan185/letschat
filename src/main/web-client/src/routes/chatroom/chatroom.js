@@ -19,11 +19,11 @@ export function ChatRoom() {
     useEffect(() => {
         const socket = new SockJS(`${serverPort}/chat`);
         const tempStompClient = Stomp.over(socket);
-        tempStompClient.reconnect_delay = 5000;  
-        tempStompClient.heartbeat.outgoing = 4000; 
-        tempStompClient.heartbeat.incoming = 4000; 
+        tempStompClient.reconnect_delay = 5000;
+        tempStompClient.heartbeat.outgoing = 4000;
+        tempStompClient.heartbeat.incoming = 4000;
         setStompClient(tempStompClient)
-        
+
         tempStompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             console.log(`/topic/messages/${ownerToken}${uniqueChatID}`)
@@ -49,7 +49,7 @@ export function ChatRoom() {
     function sendMessage() {
         const username = user.userName
         if (stompClient && stompClient.connected) {
-            stompClient.send("/app/chat", {}, JSON.stringify({ 'from': username, 'text': ' ', 'ownerToken': `${ownerToken}`,'uniqueChatID':`${uniqueChatID}` }));
+            stompClient.send("/app/chat", {}, JSON.stringify({ 'from': username, 'text': ' ', 'ownerToken': `${ownerToken}`, 'uniqueChatID': `${uniqueChatID}` }));
         } else {
             console.error("Stomp client is not connected");
         }
