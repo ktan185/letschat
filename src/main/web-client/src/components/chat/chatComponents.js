@@ -2,7 +2,7 @@ import { createChat } from '../../services/chatService'
 import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import Modal from 'react-bootstrap/Modal'
-import Form from 'react-bootstrap/Form'
+import { Card, Form } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -131,5 +131,20 @@ export function ChatMessages({ messages }) {
         <p className={styles.default}>Begin chatting!</p>
       )}
     </ListGroup>
+  )
+}
+
+export function chatBox() {
+  return (
+    <Card>
+      <Card.Header>Featured</Card.Header>
+      <Card.Body>
+        <Card.Title>Special title treatment</Card.Title>
+        <Card.Text>
+          With supporting text below as a natural lead-in to additional content.
+        </Card.Text>
+        <Button variant="primary">Go somewhere</Button>
+      </Card.Body>
+    </Card>
   )
 }
