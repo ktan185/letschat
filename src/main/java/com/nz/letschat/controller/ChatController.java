@@ -28,7 +28,7 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/chats")
+    @GetMapping("/api/getAllChats")
     public ResponseEntity<List<Chat>> getAllChats() {
         try {
             List<Chat> allChats = chatRepository.findAll();
