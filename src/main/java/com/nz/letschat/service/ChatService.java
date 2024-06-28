@@ -15,12 +15,12 @@ public class ChatService {
     @Autowired
     ChatRepository chatRepository;
 
-    public void getChatAndUpdateMessages(Message message){
-        String ownerToken=message.getOwnerToken();
-        String uniqueChatID=message.getUniqueChatID();
-        ChatID chatId=new ChatID(ownerToken,uniqueChatID);
-        Chat chat=chatRepository.findOneByChatID(chatId);
-        List<Message> list=chat.getChatMessages();
+    public void getChatAndUpdateMessages(Message message) {
+        String ownerToken = message.getOwnerToken();
+        String uniqueChatID = message.getUniqueChatID();
+        ChatID chatId = new ChatID(ownerToken, uniqueChatID);
+        Chat chat = chatRepository.findOneByChatID(chatId);
+        List<Message> list = chat.getChatMessages();
         list.add(message);
         chatRepository.save(chat);
     }

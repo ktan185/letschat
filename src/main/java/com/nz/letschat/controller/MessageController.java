@@ -21,11 +21,11 @@ public class MessageController {
 
     @MessageMapping("/chat")
     public void send(Message message) throws Exception {
-        String ownerToken=message.getOwnerToken();
-        String uniqueChatID=message.getUniqueChatID();
+        String ownerToken = message.getOwnerToken();
+        String uniqueChatID = message.getUniqueChatID();
         String time = new SimpleDateFormat("HH:mm").format(new Date());
         message.setTime(time);
-        simpMessagingTemplate.convertAndSend("/topic/messages/" + ownerToken+uniqueChatID, message);
+        simpMessagingTemplate.convertAndSend("/topic/messages/" + ownerToken + uniqueChatID, message);
         chatService.getChatAndUpdateMessages(message);
     }
 
