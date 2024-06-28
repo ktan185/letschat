@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './home.module.css'
 import { getAllChats } from '../../services/chatService'
 import { useNavigate } from 'react-router-dom'
-import { CreateChat, getChatUrl } from '../chat/chat'
+import { CreateChat, getChatUrl } from '../chat/chatroom.js'
 import Button from 'react-bootstrap/esm/Button'
 
 function Home() {
