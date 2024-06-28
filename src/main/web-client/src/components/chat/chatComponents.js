@@ -148,6 +148,8 @@ export function ChatBox({ stompClient, chatRoom, messages }) {
   }
 
   function sendMessage(message) {
+    if (message === '') return
+
     const username = user.userName
     if (stompClient && stompClient.connected) {
       stompClient.send(
