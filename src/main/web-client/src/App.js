@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Landing from './routes/landing/landing'
 import Home from './routes/home/home'
-import Chat from './routes/chat/chat'
+import { Chat } from './routes/chat/chat'
 import AuthProvider from './contexts/AuthProvider'
 import PrivateRoute from './routes/common/private'
 
