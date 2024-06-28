@@ -18,7 +18,6 @@ export function LoginForm() {
       : { userName: userName, password: password }
 
     try {
-      console.log(payload)
       // call login API to attempt to sign in
       auth.loginAction(payload)
     } catch (err) {
