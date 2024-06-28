@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import com.nz.letschat.model.Chat;
+import com.nz.letschat.model.Message;
 import com.nz.letschat.model.Chat.ChatID;
 import com.nz.letschat.repository.ChatRepository;
 
@@ -40,6 +41,19 @@ public class ChatController {
 
     }
 
+    @GetMapping("/api/getAllChatMessages")
+    public ResponseEntity<?> getAllChatMessages(@RequestParam String ownerToken, @RequestParam String uniqueChatID) {
+        try {
+            ChatID chatID=new ChatID(ownerToken,uniqueChatID);
+            Chat chat = chatRepository.findOneByChatID(chatID);
+            List<Message> list=chat.getChatMessages();
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+
+    }
+
      @GetMapping("/chat")
     public ResponseEntity<?> getChat(@RequestParam String ownerToken, @RequestParam String uniqueChatID){
         try{
@@ -53,4 +67,6 @@ public class ChatController {
             return ResponseEntity.badRequest().body(e);
         }
     }
+
+
 }
