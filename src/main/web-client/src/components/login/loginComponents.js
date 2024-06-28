@@ -6,7 +6,25 @@ import { validateEmail } from './utils/login'
 import { signUp } from '../../services/authService'
 import { useAuth } from '../../contexts/AuthProvider'
 
-export function LoginForm() {
+export function SignInSignUpCard({ isSignUpCard, toggleSignUp }) {
+  return (
+    <>
+      {isSignUpCard ? (
+        <>
+          <SignUpForm toggleSignUp={toggleSignUp} />
+          <p>Have an account?</p>
+        </>
+      ) : (
+        <>
+          <LoginForm />
+          <p>Don't have an account?</p>
+        </>
+      )}
+    </>
+  )
+}
+
+function LoginForm() {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const auth = useAuth()
@@ -66,7 +84,7 @@ export function LoginForm() {
   )
 }
 
-export function SignUpForm({ toggleSignUp }) {
+function SignUpForm({ toggleSignUp }) {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
