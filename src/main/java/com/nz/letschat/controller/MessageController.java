@@ -13,16 +13,16 @@ import com.nz.letschat.model.Message;
 @Controller
 
 public class MessageController {
-    @Autowired 
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-    
+
     @MessageMapping("/chat")
     public void send(Message message) throws Exception {
         String time = new SimpleDateFormat("HH:mm").format(new Date());
         message.setTime(time);
-        //temporary handler to test
+        // temporary handler to test
         // message.setChatID(message.getFrom());
-        simpMessagingTemplate.convertAndSend("/topic/messages/"+message.getChatID(),message);
+        simpMessagingTemplate.convertAndSend("/topic/messages/" + message.getChatID(), message);
     }
-    
+
 }
