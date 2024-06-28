@@ -3,17 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@svgr/plugin-svgo": "^8.1.0",
+    "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
+    "css-select": "^5.1.0",
     "dotenv": "^16.4.5",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.38",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.3",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.0",
+    "resolve-url-loader": "^5.0.0",
+    "svgo": "^3.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -44,8 +51,12 @@
     ]
   },
   "devDependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "react-scripts": "^5.0.1",
     "rimraf": "^5.0.7",
-    "shx": "^0.3.4"
+    "shx": "^0.3.4",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stomp": "^0.1.1"
   }
 }

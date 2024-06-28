@@ -25,7 +25,7 @@ function Home() {
         {chats.length > 0 ? (
           chats.map((chat) => {
             return (
-              <div key={`${chat.chatID.uniqueChatID}${chat.chatID.ownerToken}`} className={styles.chat} onClick={() => navigate(`/chat?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`)}>
+              <div key={`${chat.chatID.uniqueChatID}${chat.chatID.ownerToken}`} className={styles.chat} onClick={() => navigate(`/chatroom?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`)}>
                 <h2>{chat.chatName}</h2>
               </div>
             );

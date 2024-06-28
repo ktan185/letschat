@@ -14,7 +14,7 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route element={<PrivateRoute />}>
               <Route path="/home" element={<Home />} />
-              <Route path="/chat" element={<Chat />} />
+              <Route path="/chatroom" element={<Chat />} />
             </Route>
           </Routes>
         </AuthProvider>
