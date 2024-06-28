@@ -1,6 +1,5 @@
 .container {
   font-family: 'Pixelify Sans', sans-serif;
-  color: white;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -8,8 +7,5 @@
   height: auto;
   justify-content: center;
   align-items: center;
-}
-.button {
-  width: 300px;
-  height: 100px;
+  margin-top: 10px;
 }

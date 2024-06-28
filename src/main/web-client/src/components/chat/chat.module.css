@@ -1,20 +1,17 @@
-.listGroupItem {
-  text-align: left;
-  border-radius: 5px;
-  margin-bottom: 2px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
-.time {
-  background-color: rgb(255, 255, 255, 0%);
+.listGroupItem {
+  border-radius: 12px;
+  margin-bottom: 2px;
 }
 
 .scrollableList {
   text-align: left;
-  width: 60vw;
+  width: 70vw;
   height: 80vh;
   max-height: 80vh;
   overflow-y: auto;
-  border: 1px solid #ddd;
+  border: 0.1px solid #ddd;
   padding: 0px;
 }
 
@@ -35,4 +32,8 @@
 
 .chatName {
   text-align: left;
+}
+
+.modal {
+  font-family: 'Pixelify Sans', sans-serif;
 }

@@ -57,8 +57,6 @@ export function ChatRoom() {
   return (
     <>
       <div className={styles.container}>
-        Welcome the owner of this chat is {ownerToken} and the uniqueChatID is{' '}
-        {uniqueChatID}
         <ChatBox
           chatRoom={chatRoom}
           stompClient={stompClient}

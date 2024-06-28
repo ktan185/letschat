@@ -19,6 +19,10 @@ export function CreateChat(props) {
   }
 
   function createNewChat(e) {
+    if (chatName === '') {
+      alert('Please enter a room name!')
+      return
+    }
     e.preventDefault()
     try {
       const payload = {
@@ -27,6 +31,7 @@ export function CreateChat(props) {
       }
       createChat(payload)
       props.onHide(true)
+      setChatName('')
       alert('You have sucessfully created a new chat!')
     } catch (err) {
       console.error(err)
@@ -39,6 +44,7 @@ export function CreateChat(props) {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      className={styles.modal}
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
@@ -118,13 +124,13 @@ function ChatMessages({ messages }) {
         messages.map((chat, index) => (
           <ListGroup.Item
             key={index}
-            className="d-flex justify-content-between align-items-start"
+            className={`d-flex justify-content-between align-items-start`}
           >
             <div className="ms-2 me-auto">
               <div className="fw-bold">{chat.from}</div>
               {chat.text}
             </div>
-            <Badge className={styles.time}>{`Sent at ${chat.time}`}</Badge>
+            <Badge>{`Sent at ${chat.time}`}</Badge>
           </ListGroup.Item>
         ))
       ) : (
