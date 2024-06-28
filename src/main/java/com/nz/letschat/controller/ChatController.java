@@ -43,7 +43,7 @@ public class ChatController {
      @GetMapping("/chat")
     public ResponseEntity<?> getChat(@RequestParam String ownerToken, @RequestParam String uniqueChatID){
         try{
-            ChatID chatID=new ChatID(ownerToken,uniqueChatID);
+            ChatID chatID = new ChatID(ownerToken,uniqueChatID);
             if (!chatRepository.existsByChatID(chatID)) {
                 return ResponseEntity.badRequest().body("Chat Dosen't Exist!");
             }

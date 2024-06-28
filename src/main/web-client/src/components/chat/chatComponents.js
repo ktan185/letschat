@@ -72,13 +72,13 @@ export function getChatUrl(chat) {
   return `/chatroom?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`
 }
 
-export function ChatList({ chats }) {
+export function ChatRoomList({ chats: chatlist }) {
   const navigate = useNavigate()
   return (
     <>
-      {chats?.length > 0 ? (
+      {chatlist?.length > 0 ? (
         <ListGroup>
-          {chats.map((chat, index) => (
+          {chatlist.map((chat, index) => (
             <ListGroup.Item
               as="li"
               className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
@@ -100,5 +100,31 @@ export function ChatList({ chats }) {
         <h2>No Chats Available</h2>
       )}
     </>
+  )
+}
+
+export function ChatMessages({ messages }) {
+  console.log('Inside the component', messages)
+  return (
+    <ListGroup className={styles.scrollableList}>
+      {messages?.length > 0 ? (
+        messages.map((chat, index) => (
+          <ListGroup.Item
+            key={index}
+            className="d-flex justify-content-between align-items-start"
+          >
+            <div className="ms-2 me-auto">
+              <div className="fw-bold">{chat.from}</div>
+              {chat.text}
+            </div>
+            <Badge bg="dark" pill>
+              {chat.time}
+            </Badge>
+          </ListGroup.Item>
+        ))
+      ) : (
+        <p>Begin chatting!</p>
+      )}
+    </ListGroup>
   )
 }

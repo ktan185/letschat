@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styles from './home.module.css'
 import { getAllChats } from '../../services/chatService'
-import { ChatList, CreateChat } from '../../components/chat/chatComponents.js'
+import {
+  ChatRoomList,
+  CreateChat,
+} from '../../components/chat/chatComponents.js'
 import Button from 'react-bootstrap/esm/Button'
 
 function Home() {
@@ -27,7 +30,7 @@ function Home() {
             Create a chat!
           </Button>
         </div>
-        <ChatList chats={chats} />
+        <ChatRoomList chats={chats} />
       </div>
     </div>
   )
