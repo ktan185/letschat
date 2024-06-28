@@ -25,7 +25,7 @@ public class Chat {
 
     String chatName;
 
-    String[] chatMessages;
+    Message[] chatMessages;
 
     @Data
     @AllArgsConstructor
