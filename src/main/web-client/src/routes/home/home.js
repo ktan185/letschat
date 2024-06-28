@@ -8,13 +8,13 @@ import {
 import Button from 'react-bootstrap/esm/Button'
 
 function Home() {
-  const [chats, setChats] = useState([])
+  const [chatList, setChatList] = useState([])
   const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     const fetchChats = async () => {
       const chatsData = await getAllChats()
-      setChats(chatsData)
+      setChatList(chatsData)
     }
     fetchChats()
   }, [])
@@ -30,7 +30,7 @@ function Home() {
             Create a chat!
           </Button>
         </div>
-        <ChatRoomList chats={chats} />
+        <ChatRoomList chatlist={chatList} />
       </div>
     </div>
   )

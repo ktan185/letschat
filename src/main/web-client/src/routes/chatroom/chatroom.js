@@ -26,7 +26,6 @@ export function ChatRoom() {
     setStompClient(tempStompClient)
 
     tempStompClient.connect({}, function (frame) {
-      console.log('Connected: ' + frame)
       console.log(`/topic/messages/${ownerToken}${uniqueChatID}`)
       tempStompClient.subscribe(
         `/topic/messages/${ownerToken}${uniqueChatID}`,
@@ -61,7 +60,8 @@ export function ChatRoom() {
           from: username,
           // This is the payload that we send to our api
           text: 'Testing what happens',
-          chatID: `${ownerToken}${uniqueChatID}`,
+          ownerToken: ownerToken,
+          uniqueChatID: uniqueChatID,
         })
       )
     } else {
