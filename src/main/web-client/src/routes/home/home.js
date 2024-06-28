@@ -6,9 +6,7 @@ import { useAuth } from '../../contexts/AuthProvider'
 function Home() {
   const [chats, setChats] = useState([])
   // To get a users metadata use useAuth()
-  // Delete this later
   const auth = useAuth()
-  console.log(auth.user)
 
   useEffect(() => {
     const fetchChats = async () => {
