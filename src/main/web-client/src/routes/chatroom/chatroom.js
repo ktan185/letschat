@@ -1,6 +1,11 @@
 import { useSearchParams } from 'react-router-dom'
 import styles from './chatroom.module.css'
 import { createChat } from '../../services/chatService'
+import { useState } from 'react'
+import { useAuth } from '../../contexts/AuthProvider'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 export function ChatRoom() {
   const { searchParams } = useSearchParams()
