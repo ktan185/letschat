@@ -10,4 +10,5 @@ import com.nz.letschat.model.Chat.ChatID;
 public interface ChatRepository extends MongoRepository<Chat,String>{
     public List<Chat> findAll();
     public boolean existsByChatID(ChatID chatID);
+    public Chat findOneByChatID(ChatID chatID);
 }
