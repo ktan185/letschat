@@ -1,10 +1,11 @@
 import { useSearchParams } from 'react-router-dom';
-import styles from './chat.module.css'
+import styles from './chatroom.module.css'
 import SockJS from 'sockjs-client';
 import { useEffect } from 'react';
 import { Client, Stomp } from '@stomp/stompjs';
 
 function ChatRoom() {
+
     let [searchParams, setSearchParams] = useSearchParams();
     const ownerToken = searchParams.get('ownerToken');
     const uniqueChatID = searchParams.get('uniqueChatID');
