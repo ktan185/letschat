@@ -2,14 +2,19 @@ import React, { useEffect, useState } from 'react'
 import styles from './home.module.css'
 import { getChats } from '../../services/chatService'
 import { useAuth } from '../../contexts/AuthProvider'
+import { useNavigate } from 'react-router-dom'
 
 function Home() {
   const [chats, setChats] = useState([])
 
   // This is how you get the user's infor
   const auth = useAuth()
+
+  const navigate=useNavigate()
+
   const user = auth.getUserDetails()
   console.log(user)
+
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -24,11 +29,13 @@ function Home() {
       <h1>Welcome back!</h1>
       <div className={styles.chats}>
         {chats.length > 0 ? (
-          chats.map((chat) => (
-            <div key={chat.chatID} className={styles.chat}>
-              <h2>{chat.chatName}</h2>
-            </div>
-          ))
+          chats.map((chat) => {
+            return (
+              <div key={`${chat.chatID.uniqueChatID}${chat.chatID.ownerToken}`} className={styles.chat} onClick={() => navigate(`/chat?ownerToken=${chat.chatID.ownerToken}&uniqueChatID=${chat.chatID.uniqueChatID}`)}>
+                <h2>{chat.chatName}</h2>
+              </div>
+            );
+          })
         ) : (
           <h2>No Chats Available</h2>
         )}
