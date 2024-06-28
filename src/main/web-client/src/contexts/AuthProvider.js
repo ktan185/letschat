@@ -14,9 +14,7 @@ const AuthProvider = ({ children }) => {
       const res = await signIn(data)
       if (res.data) {
         setUser(res.data)
-        // TO DO: Add a user token!
         setToken(res.data.token)
-        console.log(token)
         localStorage.setItem('site', res.data.token)
         navigate('/home')
       }
