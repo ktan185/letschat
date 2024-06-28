@@ -20,6 +20,8 @@ public class MessageController {
     public void send(Message message) throws Exception {
         String time = new SimpleDateFormat("HH:mm").format(new Date());
         message.setTime(time);
+        System.out.println(message);
+        System.out.println("/topic/messages/"+message.getChatID());
         //temporary handler to test
         // message.setChatID(message.getFrom());
         simpMessagingTemplate.convertAndSend("/topic/messages/"+message.getChatID(),message);
