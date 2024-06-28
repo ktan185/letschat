@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styles from './home.module.css'
 import { getAllChats } from '../../services/chatService'
 import { useNavigate } from 'react-router-dom'
-import { CreateChat, getChatUrl } from '../chat/chatroom.js'
+import { CreateChat, getChatUrl} from '../../components/chat/chatComponents.js'
 import Button from 'react-bootstrap/esm/Button'
+import { useAuth } from '../../contexts/AuthProvider.js'
 
 function Home() {
   const [chats, setChats] = useState([])
