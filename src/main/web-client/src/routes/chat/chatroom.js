@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import styles from './chatroom.module.css'
+import { createChat } from '../../services/chatService'
 
 export function ChatRoom() {
   const { searchParams } = useSearchParams()
