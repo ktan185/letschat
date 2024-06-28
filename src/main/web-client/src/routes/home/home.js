@@ -13,7 +13,6 @@ function Home() {
   const navigate=useNavigate()
 
   const user = auth.getUserDetails()
-  console.log(user)
 
 
   useEffect(() => {

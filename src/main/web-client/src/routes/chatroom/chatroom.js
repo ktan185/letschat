@@ -3,18 +3,19 @@ import styles from './chatroom.module.css'
 import SockJS from 'sockjs-client';
 import { useEffect } from 'react';
 import { Client, Stomp } from '@stomp/stompjs';
+import { useAuth } from '../../contexts/AuthProvider'
 
 function ChatRoom() {
 
     let [searchParams, setSearchParams] = useSearchParams();
+    const auth = useAuth()
+    console.log(auth.getUserDetails())
     const ownerToken = searchParams.get('ownerToken');
     const uniqueChatID = searchParams.get('uniqueChatID');
     const serverPort = 'http://localhost:8080'
-    const stompClient = new Stomp();
 
     useEffect(() => {
         const socket = new SockJS(`${serverPort}/chat`);
-
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
@@ -26,6 +27,7 @@ function ChatRoom() {
             }
             console.log("Disconnected");
         }
+        
     }, [ownerToken, uniqueChatID]);
 
 
