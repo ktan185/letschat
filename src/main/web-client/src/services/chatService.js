@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+const SERVER_PORT = 'http://localhost:8080'
+
 export const getAllChats = async () => {
   try {
-    const response = await axios.get(`/api/getAllChats`)
+    const response = await axios.get(`${SERVER_PORT}/api/getAllChats`)
     return response.data
   } catch (error) {
     console.error('Error fetching chats:', error)
@@ -12,7 +14,7 @@ export const getAllChats = async () => {
 export const getChat = async ({ ownerToken, uniqueChatID }) => {
   try {
     const response = await axios.get(
-      `/chat?ownerToken=${ownerToken}&uniqueChatID=${uniqueChatID}`
+      `${SERVER_PORT}/chat?ownerToken=${ownerToken}&uniqueChatID=${uniqueChatID}`
     )
     return response.data
   } catch (error) {
@@ -25,7 +27,7 @@ export const createChat = async (payload) => {
     const userToken = payload.userToken
     const body = payload.chatName
     const response = await axios.post(
-      `/api/addChat?userToken=${userToken}`,
+      `${SERVER_PORT}/api/addChat?userToken=${userToken}`,
       body
     )
     return response.data
