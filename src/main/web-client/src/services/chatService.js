@@ -11,7 +11,7 @@ export const getAllChats = async () => {
   }
 }
 
-export const getChat = async ({ ownerToken, uniqueChatID }) => {
+export const getChat = async (ownerToken, uniqueChatID) => {
   try {
     const response = await axios.get(
       `${SERVER_PORT}/chat?ownerToken=${ownerToken}&uniqueChatID=${uniqueChatID}`

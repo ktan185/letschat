@@ -2,3 +2,32 @@
   text-align: left;
   border-radius: 5px;
 }
+
+.time {
+  background-color: rgb(255, 255, 255, 0%);
+}
+
+.scrollableList {
+  text-align: left;
+  width: 60vw;
+  height: 80vh;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 0px;
+}
+
+.default {
+  font-size: 25px;
+  text-align: center;
+}
+
+.input {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+}
+
+.cardContainer {
+  height: 80vh;
+}

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import styles from './home.module.css'
 import { getAllChats } from '../../services/chatService'
-import { ChatList, CreateChat } from '../../components/chat/chatComponents.js'
+import {
+  ChatRoomList,
+  CreateChat,
+} from '../../components/chat/chatComponents.js'
 import Button from 'react-bootstrap/esm/Button'
 
 function Home() {
-  const [chats, setChats] = useState([])
+  const [chatList, setChatList] = useState([])
   const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     const fetchChats = async () => {
       const chatsData = await getAllChats()
-      setChats(chatsData)
+      setChatList(chatsData)
     }
     fetchChats()
   }, [])
@@ -27,7 +30,7 @@ function Home() {
             Create a chat!
           </Button>
         </div>
-        <ChatList chats={chats} />
+        <ChatRoomList chatlist={chatList} />
       </div>
     </div>
   )
