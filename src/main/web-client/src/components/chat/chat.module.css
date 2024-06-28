@@ -10,6 +10,7 @@
 .scrollableList {
   text-align: left;
   width: 60vw;
+  height: 80vh;
   max-height: 80vh;
   overflow-y: auto;
   border: 1px solid #ddd;

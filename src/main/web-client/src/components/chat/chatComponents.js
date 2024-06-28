@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 import ListGroup from 'react-bootstrap/ListGroup'
 import styles from './chat.module.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
@@ -134,12 +134,36 @@ function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ chatRoom, send, messages }) {
-  const [message, setMessage] = useState('')
+export function ChatBox({ stompClient, chatRoom, messages }) {
+  let [searchParams] = useSearchParams()
+  const ownerToken = searchParams.get('ownerToken')
+  const uniqueChatID = searchParams.get('uniqueChatID')
+  const [inputBox, setInputBox] = useState('')
+  const auth = useAuth()
+  const user = auth.getUserDetails()
 
   const handleMessageChange = (e) => {
     e.preventDefault()
-    setMessage(e.target.value)
+    setInputBox(e.target.value)
+  }
+
+  function sendMessage(message) {
+    const username = user.userName
+    if (stompClient && stompClient.connected) {
+      stompClient.send(
+        '/app/chat',
+        {},
+        JSON.stringify({
+          from: username,
+          text: message,
+          ownerToken: ownerToken,
+          uniqueChatID: uniqueChatID,
+        })
+      )
+      setInputBox('')
+    } else {
+      console.error('Stomp client is not connected')
+    }
   }
 
   return (
@@ -151,14 +175,14 @@ export function ChatBox({ chatRoom, send, messages }) {
           <div className={styles.input}>
             <Form.Control
               type="text"
-              value={message}
+              value={inputBox}
               onChange={handleMessageChange}
             />
             <Button
               size="sm"
               variant="sucess"
               className={styles.button}
-              onClick={send}
+              onClick={() => sendMessage(inputBox)}
             >
               Send
             </Button>

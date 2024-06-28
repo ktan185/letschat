@@ -20,9 +20,9 @@ export function ChatRoom() {
 
   useEffect(() => {
     const fetchChatRoom = async () => {
-      const res = await getChat(ownerToken, uniqueChatID)
-      setChatRoom(res)
-      console.log('This is the chatRoom metadata: ', res)
+      const chat = await getChat(ownerToken, uniqueChatID)
+      setChatRoom(chat)
+      setMessages(chat.chatMessages)
     }
     fetchChatRoom()
   }, [])
@@ -36,7 +36,6 @@ export function ChatRoom() {
     setStompClient(tempStompClient)
 
     tempStompClient.connect({}, function (frame) {
-      console.log(`/topic/messages/${ownerToken}${uniqueChatID}`)
       tempStompClient.subscribe(
         `/topic/messages/${ownerToken}${uniqueChatID}`,
         function (messageOutput) {
@@ -52,34 +51,19 @@ export function ChatRoom() {
       if (tempStompClient) {
         tempStompClient.disconnect()
       }
-      console.log('Disconnected')
     }
   }, [ownerToken, uniqueChatID])
-
-  function sendMessage() {
-    const username = user.userName
-    if (stompClient && stompClient.connected) {
-      stompClient.send(
-        '/app/chat',
-        {},
-        JSON.stringify({
-          from: username,
-          text: 'Testing what happens',
-          ownerToken: ownerToken,
-          uniqueChatID: uniqueChatID,
-        })
-      )
-    } else {
-      console.error('Stomp client is not connected')
-    }
-  }
 
   return (
     <>
       <div className={styles.container}>
         Welcome the owner of this chat is {ownerToken} and the uniqueChatID is{' '}
         {uniqueChatID}
-        <ChatBox chatRoom={chatRoom} send={sendMessage} messages={messages} />
+        <ChatBox
+          chatRoom={chatRoom}
+          stompClient={stompClient}
+          messages={messages}
+        />
       </div>
     </>
   )
