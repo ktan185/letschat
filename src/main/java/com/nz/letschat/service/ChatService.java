@@ -21,26 +21,37 @@ public class ChatService {
     @Autowired
     ChatRepository chatRepository;
     private final Map<ChatID, Set<User>> chatToUserMap = new HashMap<ChatID, Set<User>>();
-    private final Map<User, ChatID> userToChatMap = new HashMap<User, ChatID>();
+    private final Map<String, ConnectedUser> sessionToConnectedUser = new HashMap<String, ConnectedUser>();
 
     public Set<User> addUser(ConnectedUser connectedUser, String sessionId) {
         ChatID chatID = connectedUser.getChatID();
         User user = connectedUser.getUser();
         Set<User> userSet = chatToUserMap.getOrDefault(chatID, new HashSet<User>());
-        userToChatMap.put(user,chatID);
-        
+        sessionToConnectedUser.put(sessionId, connectedUser);
         userSet.add(user);
+        chatToUserMap.put(chatID,userSet);
+
         return userSet;
     }
 
-    public Set<User> decrementUsers(ConnectedUser connectedUser, String sessionId) {
+    public Set<User> decrementUsers(String sessionId) {
+        if(!sessionToConnectedUser.containsKey(sessionId)){
+            return new HashSet<User> ();
+        }
+        ConnectedUser connectedUser=sessionToConnectedUser.get(sessionId);
+
         ChatID chatID = connectedUser.getChatID();
         User user = connectedUser.getUser();
+
         Set<User> userSet = chatToUserMap.getOrDefault(chatID, new HashSet<User>());
+
+        sessionToConnectedUser.remove(sessionId);
         userSet.remove(user);
+
         if (userSet.isEmpty()) {
             chatToUserMap.remove(chatID);
         }
+        
         return userSet;
     }
 
@@ -53,6 +64,11 @@ public class ChatService {
     public Set<User> getUsers(ChatID chatID) {
         Set<User> userSet = chatToUserMap.getOrDefault(chatID, new HashSet<User>());
         return userSet;
+    }
+
+    public ConnectedUser getConnectedUser(String sessionID){
+        ConnectedUser connectedUser=sessionToConnectedUser.get(sessionID);
+        return connectedUser;
     }
 
     public void getChatAndUpdateMessages(Message message) {
