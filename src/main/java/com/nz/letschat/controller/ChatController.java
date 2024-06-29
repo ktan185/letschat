@@ -7,17 +7,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nz.letschat.model.Message;
 import com.nz.letschat.model.chatModels.Chat;
 import com.nz.letschat.model.chatModels.Chat.ChatID;
 import com.nz.letschat.repository.ChatRepository;
+import com.nz.letschat.service.ChatService;
 
 @RestController
 public class ChatController {
     @Autowired
     ChatRepository chatRepository;
+    @Autowired
+    ChatService chatService;
 
     @PostMapping("/api/addChat")
     public ResponseEntity<?> addChat(@RequestBody String chatName, @RequestParam String userToken) {
@@ -55,10 +60,14 @@ public class ChatController {
     }
 
     @GetMapping("/api/getChatMessageRange")
-    public ResponseEntity<?> getChatMessageRange(@RequestParam String ownerToken, @RequestParam String uniqueChatID, @RequestParam String lowerBound, @RequestParam String upperBound) {
+    public ResponseEntity<?> getChatMessageRange(@RequestParam String ownerToken, @RequestParam String uniqueChatID,
+            @RequestParam String lowerBoundInclusive, @RequestParam String upperBoundExclusive) {
         try {
-            ChatID chatID = new ChatID(ownerToken, uniqueChatID);
-            Chat chat = chatRepository.findOneByChatID(chatID);
+
+            int lb = Integer.parseInt(lowerBoundInclusive);
+            int ub = Integer.parseInt(upperBoundExclusive);
+
+            return chatService.getSubMessages(ownerToken, uniqueChatID, lb, ub);
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
