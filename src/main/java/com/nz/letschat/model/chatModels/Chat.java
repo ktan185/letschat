@@ -1,7 +1,10 @@
-package com.nz.letschat.model;
+package com.nz.letschat.model.chatModels;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.nz.letschat.model.Message;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
