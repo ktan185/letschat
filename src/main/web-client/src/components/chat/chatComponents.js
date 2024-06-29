@@ -8,6 +8,8 @@ import Badge from 'react-bootstrap/Badge'
 import ListGroup from 'react-bootstrap/ListGroup'
 import styles from './chat.module.css'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import SockJS from 'sockjs-client'
+import { Stomp } from '@stomp/stompjs'
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
@@ -79,12 +81,82 @@ function getChatUrl(chat) {
 }
 
 export function ChatRoomList({ chatlist }) {
-  const navigate = useNavigate()
+  const [chatRooms, setChatRooms] = useState([]);
+
+  const navigate = useNavigate();
+  const SERVER = 'http://localhost:8080';
+
+  useEffect(() => {
+    const subscriptions = chatlist.map(chat => {
+      const chatID = chat.chatID;
+      const ownerToken = chatID.ownerToken;
+      const uniqueChatID = chatID.uniqueChatID;
+
+      const socket = new SockJS(`${SERVER}/chat`);
+      const stompClient = Stomp.over(socket);
+
+      stompClient.reconnect_delay = 5000;
+      stompClient.heartbeat.outgoing = 4000;
+      stompClient.heartbeat.incoming = 4000;
+
+      stompClient.connect({}, function (frame) {
+
+        stompClient.subscribe(
+          `/topic/numUsers/${ownerToken}${uniqueChatID}`,
+          function (userListOutput) {
+            const decodedUserList = new TextDecoder().decode(
+              userListOutput._binaryBody
+            );
+            const numUsers = JSON.parse(decodedUserList);
+
+            console.log(numUsers)
+            setChatRooms(prevChatRooms => {
+
+              const existingIndex = prevChatRooms.findIndex(
+                room => room.chatID.ownerToken === ownerToken && room.chatID.uniqueChatID === uniqueChatID
+              );
+
+              if (existingIndex !== -1) {
+                const updatedRooms = [...prevChatRooms];
+                updatedRooms[existingIndex] = {
+                  ...updatedRooms[existingIndex],
+                  numUsers: numUsers
+                };
+                return updatedRooms;
+              } else {
+                return [...prevChatRooms, { ...chat, numUsers: numUsers }];
+              }
+            });
+          }
+        );
+
+
+        stompClient.send(
+          '/app/getNumUsers',
+          {},
+          JSON.stringify({
+            ownerToken: ownerToken,
+            uniqueChatID: uniqueChatID
+          })
+        );
+      });
+
+      return stompClient;
+    });
+
+    return () => {
+
+      subscriptions.forEach(client => client.disconnect());
+    };
+  }, [chatlist]);
+
+
   return (
     <>
-      {chatlist?.length > 0 ? (
+      {chatRooms?.length > 0 ? (
         <ListGroup>
-          {chatlist.map((chat, index) => (
+          {chatRooms.map((chat, index) => {
+            return(
             <ListGroup.Item
               as="li"
               className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
@@ -97,10 +169,10 @@ export function ChatRoomList({ chatlist }) {
                 description
               </div>
               <Badge bg="primary" pill>
-                users chatting: 420
+                users chatting: {chat.numUsers}
               </Badge>
             </ListGroup.Item>
-          ))}
+          )})}
         </ListGroup>
       ) : (
         <h2>No Chats Available</h2>
@@ -140,7 +212,7 @@ function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ stompClient, chatRoom, messages, userList}) {
+export function ChatBox({ stompClient, chatRoom, messages, userList }) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
