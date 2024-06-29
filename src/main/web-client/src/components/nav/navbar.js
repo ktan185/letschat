@@ -18,6 +18,7 @@ function NavBar() {
             onClick={() => {
               navigate('/home')
             }}
+            className={styles.navBarBrand}
           >
             <img
               className={styles.logo}
