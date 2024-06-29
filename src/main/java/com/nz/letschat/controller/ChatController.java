@@ -2,6 +2,7 @@ package com.nz.letschat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,6 +66,20 @@ public class ChatController {
             Chat chat = chatRepository.findOneByChatID(chatID);
             return ResponseEntity.ok(chat);
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+    }
+
+    @DeleteMapping("/api/deleteChat")
+    public ResponseEntity<?> deleteChat(@RequestParam String token, @RequestParam String uniqueChatID){
+        try{
+            ChatID chatID=new ChatID(token,uniqueChatID);
+            if(!chatRepository.existsByChatID(chatID)){
+                return ResponseEntity.badRequest().body("Error wrong user token and unique chat ID");
+            }
+            chatRepository.deleteOneByChatID(chatID);
+            return ResponseEntity.ok("Successfully Deleted");
+        }catch(Exception e){
             return ResponseEntity.badRequest().body(e);
         }
     }
