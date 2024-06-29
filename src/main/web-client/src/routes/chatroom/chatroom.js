@@ -37,6 +37,16 @@ export function ChatRoom() {
     setStompClient(tempStompClient)
 
     tempStompClient.connect({}, function (frame) {
+        tempStompClient.subscribe(
+            `/topic/connected/${ownerToken}${uniqueChatID}`,
+            function (userListOutput) {
+              const decodedUserList = new TextDecoder().decode(
+                userListOutput._binaryBody
+              )
+              const tempUserList=JSON.parse(decodedUserList);
+              setUserList(tempUserList)
+            }
+          )
         tempStompClient.send(
             '/app/connected',
             {},
@@ -56,16 +66,6 @@ export function ChatRoom() {
           )
           const messageJSON = JSON.parse(messageString)
           setMessages((messages) => [...messages, messageJSON])
-        }
-      )
-      tempStompClient.subscribe(
-        `/topic/connected/${ownerToken}${uniqueChatID}`,
-        function (userListOutput) {
-          const decodedUserList = new TextDecoder().decode(
-            userListOutput._binaryBody
-          )
-          const tempUserList=JSON.parse(decodedUserList);
-          setUserList(tempUserList)
         }
       )
     })
