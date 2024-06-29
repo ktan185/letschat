@@ -71,13 +71,17 @@ public class ChatController {
     }
 
     @DeleteMapping("/api/deleteChat")
-    public ResponseEntity<String> deleteChat(@RequestParam String token, @RequestParam String uniqueChatID){
-        ChatID chatID=new ChatID(token,uniqueChatID);
-        if(!chatRepository.existsByChatID(chatID)){
-            return ResponseEntity.badRequest().body("Error wrong user token and unique chat ID");
+    public ResponseEntity<?> deleteChat(@RequestParam String token, @RequestParam String uniqueChatID){
+        try{
+            ChatID chatID=new ChatID(token,uniqueChatID);
+            if(!chatRepository.existsByChatID(chatID)){
+                return ResponseEntity.badRequest().body("Error wrong user token and unique chat ID");
+            }
+            chatRepository.deleteOneByChatID(chatID);
+            return ResponseEntity.ok("Successfully Deleted");
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e);
         }
-        chatRepository.deleteOneByChatID(chatID);
-        return ResponseEntity.ok("Successfully Deleted");
     }
 
 }
