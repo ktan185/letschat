@@ -1,7 +1,9 @@
 package com.nz.letschat.model;
 
+import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -26,6 +28,9 @@ public class User implements Cloneable {
     private String password;
 
     private String token = UUID.randomUUID().toString();
+
+    @CreatedDate
+    private Date createdDate;
 
     @Override
     public User clone() {
