@@ -21,16 +21,15 @@ function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>Welcome back!</h1>
       <div className={styles.chats}>
-        <h1>Join a chat room</h1>
+        <h1>Join a chat room!</h1>
         <CreateChat show={showModal} onHide={() => setShowModal(false)} />
+        <ChatRoomList chatlist={chatList} />
         <div className={styles.createChatButton}>
           <Button variant="primary" onClick={() => setShowModal(true)}>
             Create a chat!
           </Button>
         </div>
-        <ChatRoomList chatlist={chatList} />
       </div>
     </div>
   )

@@ -1,9 +1,21 @@
+import { useLocation, useNavigate } from 'react-router-dom'
 import { SignInSignUpCard } from '../../components/login/loginComponents'
 import styles from './landing.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../../contexts/AuthProvider'
 
 function Landing() {
   const [isSignUpCard, setSignUp] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const auth = useAuth()
+
+  // If we are on this page, then we have to be signed out.
+  useEffect(() => {
+    if (location.pathname === '/' && auth.user) {
+      navigate('/home')
+    }
+  })
 
   const toggleSignUp = () => {
     setSignUp(!isSignUpCard)

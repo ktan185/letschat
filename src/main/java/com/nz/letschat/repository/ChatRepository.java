@@ -8,6 +8,8 @@ import com.nz.letschat.model.Chat;
 import com.nz.letschat.model.Chat.ChatID;
 
 public interface ChatRepository extends MongoRepository<Chat, String> {
+    
+    @SuppressWarnings("null")
     public List<Chat> findAll();
 
     public boolean existsByChatID(ChatID chatID);
