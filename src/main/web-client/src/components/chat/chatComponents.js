@@ -140,7 +140,7 @@ function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ stompClient, chatRoom, messages }) {
+export function ChatBox({ stompClient, chatRoom, messages, userList}) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
@@ -177,6 +177,7 @@ export function ChatBox({ stompClient, chatRoom, messages }) {
   return (
     <div className={styles.cardContainer}>
       <Card>
+        Number Of Users Currently Active: {userList.length}
         <Card.Header>{chatRoom?.chatName}</Card.Header>
         <Card.Body>
           <ChatMessages messages={messages} />

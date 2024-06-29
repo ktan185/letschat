@@ -10,6 +10,7 @@ import { getChat } from '../../services/chatService'
 export function ChatRoom() {
   let [searchParams] = useSearchParams()
   const [chatRoom, setChatRoom] = useState(null)
+  const [userList, setUserList] = useState([])
   const auth = useAuth()
   const user = auth.getUserDetails()
   const ownerToken = searchParams.get('ownerToken')
@@ -36,6 +37,17 @@ export function ChatRoom() {
     setStompClient(tempStompClient)
 
     tempStompClient.connect({}, function (frame) {
+        tempStompClient.send(
+            '/app/connected',
+            {},
+            JSON.stringify({
+                chatID:{
+                    ownerToken:ownerToken,
+                    uniqueChatID:uniqueChatID
+                },
+                user:user
+            })
+          )
       tempStompClient.subscribe(
         `/topic/messages/${ownerToken}${uniqueChatID}`,
         function (messageOutput) {
@@ -44,6 +56,16 @@ export function ChatRoom() {
           )
           const messageJSON = JSON.parse(messageString)
           setMessages((messages) => [...messages, messageJSON])
+        }
+      )
+      tempStompClient.subscribe(
+        `/topic/connected/${ownerToken}${uniqueChatID}`,
+        function (userListOutput) {
+          const decodedUserList = new TextDecoder().decode(
+            userListOutput._binaryBody
+          )
+          const tempUserList=JSON.parse(decodedUserList);
+          setUserList(tempUserList)
         }
       )
     })
@@ -61,6 +83,7 @@ export function ChatRoom() {
           chatRoom={chatRoom}
           stompClient={stompClient}
           messages={messages}
+          userList={userList}
         />
       </div>
     </>

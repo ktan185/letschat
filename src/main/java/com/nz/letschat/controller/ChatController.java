@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import com.nz.letschat.model.Chat;
+
 import com.nz.letschat.model.Message;
-import com.nz.letschat.model.Chat.ChatID;
+import com.nz.letschat.model.chatModels.Chat;
+import com.nz.letschat.model.chatModels.Chat.ChatID;
 import com.nz.letschat.repository.ChatRepository;
 
 @RestController
