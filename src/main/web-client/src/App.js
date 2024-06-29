@@ -5,6 +5,7 @@ import { ChatRoom } from './routes/chatroom/chatroom'
 import AuthProvider from './contexts/AuthProvider'
 import PrivateRoute from './routes/common/private'
 import NavBar from './components/nav/navbar'
+import Profile from './routes/profile/profile'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route element={<PrivateRoute />}>
               <Route path="/home" element={<Home />} />
               <Route path="/chatroom" element={<ChatRoom />} />
+              <Route path="/me" element={<Profile />} />
             </Route>
           </Routes>
         </AuthProvider>

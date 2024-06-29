@@ -33,6 +33,13 @@ function NavBar() {
           <Nav>
             <Nav.Link
               onClick={() => {
+                navigate('/home')
+              }}
+            >
+              Home
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
                 navigate('/me')
               }}
             >
