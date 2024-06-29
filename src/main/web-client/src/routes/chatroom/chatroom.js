@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import styles from './chatroom.module.css'
 import SockJS from 'sockjs-client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
 import { ChatBox } from '../../components/chat/chatComponents'
@@ -11,6 +11,7 @@ export function ChatRoom() {
   let [searchParams] = useSearchParams()
   const [chatRoom, setChatRoom] = useState(null)
   const [userList, setUserList] = useState([])
+  const [userTypingList, setUserTypingList] = useState([])
   const auth = useAuth()
   const user = auth.getUserDetails()
   const ownerToken = searchParams.get('ownerToken')
@@ -18,6 +19,7 @@ export function ChatRoom() {
   const SERVER = 'http://localhost:8080'
   const [messages, setMessages] = useState([])
   const [stompClient, setStompClient] = useState(null)
+  const typingTimeouts = useRef({});
 
   useEffect(() => {
     const fetchChatRoom = async () => {
@@ -68,6 +70,29 @@ export function ChatRoom() {
           setMessages((messages) => [...messages, messageJSON])
         }
       )
+      tempStompClient.subscribe(`/topic/typing/${ownerToken}${uniqueChatID}`, function (userOutput) {
+        const userMessage = new TextDecoder().decode(userOutput._binaryBody)
+        const user = JSON.parse(userMessage)
+
+        setUserTypingList(userTypingList => {
+          const existingUserIndex = userTypingList.findIndex(u => u.userName === user.userName);
+
+          if (existingUserIndex !== -1) {
+            clearTimeout(typingTimeouts.current[user.userName]);
+          } else {
+            userTypingList = [...userTypingList, user];
+          }
+
+          typingTimeouts.current[user.userName] = setTimeout(() => {
+            setUserTypingList(userTypingList => {
+              const updatedList = userTypingList.filter(u => u.userName !== user.userName);
+              return updatedList;
+            });
+          }, 5000);
+    
+          return userTypingList;
+        });
+      })
     })
     return () => {
       if (tempStompClient) {
@@ -84,6 +109,7 @@ export function ChatRoom() {
           stompClient={stompClient}
           messages={messages}
           userList={userList}
+          userTypingList={userTypingList}
         />
       </div>
     </>
