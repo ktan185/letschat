@@ -46,10 +46,17 @@ public class MessageController {
         String sessionID=headerAccessor.getSessionId();
 
         Set<User> userSet=chatService.addUser(connectedUser,sessionID);
-        
+        int numUsers=chatService.getNumUsers(chatID);
         simpMessagingTemplate.convertAndSend("/topic/connected/" + ownerToken + uniqueChatID, userSet);
+        simpMessagingTemplate.convertAndSend("/topic/numUsers/" + ownerToken + uniqueChatID, numUsers);
+    }
 
-
+    @MessageMapping("/getNumUsers")
+    public void send(@Payload ChatID chatID) throws Exception {
+        String ownerToken=chatID.getOwnerToken();
+        String uniqueChatID=chatID.getUniqueChatID();
+        int numUsers=chatService.getNumUsers(chatID);
+        simpMessagingTemplate.convertAndSend("/topic/numUsers/" + ownerToken + uniqueChatID, numUsers);
     }
 
     @EventListener(SessionDisconnectEvent.class)
