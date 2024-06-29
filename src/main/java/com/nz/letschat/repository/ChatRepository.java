@@ -9,10 +9,12 @@ import com.nz.letschat.model.chatModels.Chat.ChatID;
 
 public interface ChatRepository extends MongoRepository<Chat, String> {
     
-    @SuppressWarnings("null")
+
     public List<Chat> findAll();
 
     public boolean existsByChatID(ChatID chatID);
 
     public Chat findOneByChatID(ChatID chatID);
+
+    public void deleteOneByChatID(ChatID chatID);
 }
