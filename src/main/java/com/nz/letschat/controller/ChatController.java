@@ -52,7 +52,17 @@ public class ChatController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
+    }
 
+    @GetMapping("/api/getChatMessageRange")
+    public ResponseEntity<?> getChatMessageRange(@RequestParam String ownerToken, @RequestParam String uniqueChatID, @RequestParam String lowerBound, @RequestParam String upperBound) {
+        try {
+            ChatID chatID = new ChatID(ownerToken, uniqueChatID);
+            Chat chat = chatRepository.findOneByChatID(chatID);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
     }
 
     @GetMapping("/chat")
