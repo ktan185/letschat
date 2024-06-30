@@ -59,11 +59,17 @@ function LoginForm({ toggleSignUp }) {
     setPassword(e.target.value)
   }
 
+  const handleKeyDown=(e)=>{
+    if (e.key === 'Enter') {
+      handleSignIn(e);
+    }
+  }
+
   return (
     <Card className={styles.card}>
       <Card.Body>
         <Card.Title>Sign In</Card.Title>
-        <Form>
+        <Form onKeyDown={handleKeyDown}>
           <Form.Group className="mb-2" controlId="email">
             <Form.Label>Username or Email</Form.Label>
             <Form.Control
