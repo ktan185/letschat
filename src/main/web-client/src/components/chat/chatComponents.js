@@ -385,6 +385,7 @@ export function ChatBox({
             onKeyDown={handleKeyDown}
             minRows={1}
             maxRows={5}
+            placeholder="Send a message..."
           />
           <Button
             size="sm"
