@@ -23,13 +23,14 @@
 
 .modal {
   font-family: 'Pixelify Sans', sans-serif;
+  justify-content: center;
+  align-items: center;
 }
 
 .chatMessageContainer {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  white-space: nowrap;
+  align-items: flex-end;
   width: 100%;
 }
 
@@ -39,8 +40,10 @@
 
 .text {
   overflow-wrap: break-word;
+  word-wrap: break-word;
   flex: 1;
-  white-space: pre-wrap;
+  white-space: normal;
+  width: 80%;
 }
 
 .badgeContainer {
@@ -65,7 +68,20 @@
 .deleteContainer img {
   cursor: pointer;
 }
+
 .delete {
   width: 20px;
   height: 20px;
+}
+
+.inputContainer {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputBox {
+  margin-right: 2px;
+  width: 100%;
 }
