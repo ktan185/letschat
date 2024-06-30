@@ -92,13 +92,13 @@ public class ChatService {
         Chat chat = chatRepository.findOneByChatID(chatID);
         List<Message> chatMessages = chat.getChatMessages();
 
-        if (lb >= chatMessages.size()) {
+        if ( chatMessages.size() - lb <=0) {
             return ResponseEntity.ok(new ArrayList<Message>());
-        } else if (ub > chatMessages.size()) {
+        } else if (chatMessages.size() - ub< 0) {
             ub = chatMessages.size();
         }
 
-        List<Message> subChatMessages = chatMessages.subList(lb, ub);
+        List<Message> subChatMessages = chatMessages.subList(chatMessages.size() - ub, chatMessages.size() - lb);
 
         return ResponseEntity.ok(subChatMessages);
     }

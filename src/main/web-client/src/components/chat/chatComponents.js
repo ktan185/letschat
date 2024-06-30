@@ -10,6 +10,8 @@ import styles from './chat.module.css'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import SockJS from 'sockjs-client'
 import { Stomp } from '@stomp/stompjs'
+import { getChatRange } from '../../services/chatService'
+
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
@@ -218,17 +220,56 @@ export function ChatRoomList({ chatlist }) {
   )
 }
 
-function ChatMessages({ messages }) {
+function ChatMessages({
+  messages,
+  setMessages,
+  setLowerBound,
+  setUpperBound,
+  upperBound,
+  increment
+}) {
+  let [searchParams] = useSearchParams()
+  const ownerToken = searchParams.get('ownerToken')
+  const uniqueChatID = searchParams.get('uniqueChatID')
   const listRef = useRef(null)
-
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight
     }
   }, [messages])
 
+  const handleScroll = async (e) => {
+    if (e.currentTarget.scrollTop === 0) {
+      const newLowerBound = upperBound;
+      const newUpperBound = upperBound + increment;
+      setLowerBound(newLowerBound);
+      setUpperBound(newUpperBound);
+
+      const chatMessages = await getChatRange(ownerToken, uniqueChatID, newLowerBound, newUpperBound);
+
+      if (chatMessages && chatMessages.length > 0) {
+
+        if (listRef.current) {
+          const prevScrollHeight = listRef.current.scrollHeight;
+
+          setMessages((prevMessages) => chatMessages.concat(prevMessages));
+
+
+          setTimeout(() => {
+            if (listRef.current) {
+              const newScrollHeight = listRef.current.scrollHeight;
+              const scrollHeightIncrease = newScrollHeight - prevScrollHeight;
+
+              listRef.current.scrollTop = scrollHeightIncrease;
+            }
+          }, 0); 
+        }
+      }
+    }
+  };
+
   return (
-    <ListGroup className={styles.scrollableList} ref={listRef}>
+    <ListGroup className={styles.scrollableList} ref={listRef} onScroll={handleScroll}>
       {messages?.length > 0 ? (
         messages.map((chat, index) => (
           <ListGroup.Item key={index} className={styles.chatMessageContainer}>
@@ -252,6 +293,11 @@ export function ChatBox({
   messages,
   userList,
   userTypingList,
+  setMessages,
+  setLowerBound,
+  setUpperBound,
+  upperBound,
+  increment
 }) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
@@ -309,7 +355,13 @@ export function ChatBox({
       Number Of Users Currently Active: {userList.length}
       <Card.Header>{chatRoom?.chatName}</Card.Header>
       <Card.Body>
-        <ChatMessages messages={messages} />
+        <ChatMessages
+          messages={messages}
+          setMessages={setMessages}
+          setLowerBound={setLowerBound}
+          setUpperBound={setUpperBound}
+          upperBound={upperBound}
+          increment={increment} />
         <TypingList list={userTypingList} />
         <div className={styles.input}>
           <Form.Control

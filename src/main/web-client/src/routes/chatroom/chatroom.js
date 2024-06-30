@@ -19,12 +19,15 @@ export function ChatRoom() {
   const SERVER = 'http://localhost:8080'
   const [messages, setMessages] = useState([])
   const [stompClient, setStompClient] = useState(null)
+  const increment=15
+  const [lowerBound,setLowerBound]=useState(0)
+  const [upperBound,setUpperBound]=useState(increment)
   const typingTimeouts = useRef({})
 
   useEffect(() => {
     const fetchChatRoom = async () => {
       const chat = await getChat(ownerToken, uniqueChatID)
-      const chatMessages = await getChatRange(ownerToken, uniqueChatID, 0, 20)
+      const chatMessages = await getChatRange(ownerToken, uniqueChatID, lowerBound, upperBound)
       setChatRoom(chat)
       setMessages(chatMessages)
     }
@@ -117,9 +120,14 @@ export function ChatRoom() {
         <ChatBox
           chatRoom={chatRoom}
           stompClient={stompClient}
-          messages={messages}
           userList={userList}
           userTypingList={userTypingList}
+          setMessages ={setMessages}
+          messages={messages}
+          setLowerBound={setLowerBound}
+          setUpperBound={setUpperBound}
+          upperBound={upperBound}
+          increment={increment}
         />
       </div>
     </>
