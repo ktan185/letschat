@@ -42,13 +42,7 @@ function LoginForm({ toggleSignUp }) {
     const payload = validateEmail(userName)
       ? { email: userName, password: password }
       : { userName: userName, password: password }
-
-    try {
-      // call login API to attempt to sign in
-      auth.loginAction(payload)
-    } catch (err) {
-      alert('The login details you provided are incorrect!')
-    }
+    auth.loginAction(payload)
   }
 
   const handleUserNameChange = (e) => {
