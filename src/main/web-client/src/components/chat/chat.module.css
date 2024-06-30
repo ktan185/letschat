@@ -42,3 +42,30 @@
   flex: 1;
   white-space: pre-wrap;
 }
+
+.badgeContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.deleteContainer {
+  margin-top: 5px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.deleteContainer p {
+  margin: 0;
+  padding-right: 5px;
+}
+
+.deleteContainer img {
+  cursor: pointer;
+}
+.delete {
+  width: 20px;
+  height: 20px;
+}

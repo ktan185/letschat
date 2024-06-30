@@ -1,4 +1,4 @@
-import { createChat } from '../../services/chatService'
+import { createChat, deleteChat } from '../../services/chatService'
 import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import Modal from 'react-bootstrap/Modal'
@@ -105,6 +105,15 @@ function getChatUrl(chat) {
 
 export function ChatRoomList({ chatlist }) {
   const [chatRooms, setChatRooms] = useState([])
+  const [hoveredItem, setHoveredItem] = useState(null)
+
+  const handleMouseEnter = (index) => {
+    setHoveredItem(index)
+  }
+
+  const handleMouseLeave = () => {
+    setHoveredItem(null)
+  }
 
   const navigate = useNavigate()
   const SERVER = 'http://localhost:8080'
@@ -178,6 +187,8 @@ export function ChatRoomList({ chatlist }) {
             return (
               <ListGroup.Item
                 className={`d-flex justify-content-between align-items-start`}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
                 key={index}
                 action
                 onClick={() => navigate(getChatUrl(chat))}
@@ -186,9 +197,16 @@ export function ChatRoomList({ chatlist }) {
                   <div className="fw-bold">{chat.chatName}</div>
                   Description: {chat.description}
                 </div>
-                <Badge bg="primary" pill>
-                  users chatting: {chat.numUsers}
-                </Badge>
+                <div className={styles.badgeContainer}>
+                  <Badge bg="primary" pill>
+                    users chatting: {chat.numUsers}
+                  </Badge>
+                  <DeleteChatButton
+                    index={index}
+                    hoveredItem={hoveredItem}
+                    chat={chat}
+                  />
+                </div>
               </ListGroup.Item>
             )
           })}
@@ -327,6 +345,38 @@ function TypingList({ list }) {
           ))}
           {list.length === 1 ? ' is typing...' : ' are typing...'}
         </div>
+      )}
+    </div>
+  )
+}
+
+function DeleteChatButton({ index, hoveredItem, chat }) {
+  const auth = useAuth()
+  const user = auth.getUserDetails()
+
+  const handleDelete = async (e) => {
+    e.stopPropagation()
+    const token = user.token
+    const uniqueChatID = chat.chatID.uniqueChatID
+    try {
+      await deleteChat(token, uniqueChatID)
+      alert('Chat has been deleted!')
+    } catch (err) {
+      alert('Something when wrong...')
+    }
+  }
+
+  return (
+    <div className={styles.deleteContainer} onClick={handleDelete}>
+      {hoveredItem === index && user.token === chat.chatID.ownerToken && (
+        <>
+          <p>Delete chat? </p>
+          <img
+            className={styles.delete}
+            src="/delete.png"
+            alt="Delete Chat"
+          ></img>
+        </>
       )}
     </div>
   )
