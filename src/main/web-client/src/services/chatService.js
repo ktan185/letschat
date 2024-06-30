@@ -22,6 +22,17 @@ export const getChat = async (ownerToken, uniqueChatID) => {
   }
 }
 
+export const getChatRange = async (ownerToken, uniqueChatID, lowerBound, upperBound) => {
+  try {
+    const response = await axios.get(
+      `${SERVER_PORT}/api/getChatMessageRange?ownerToken=${ownerToken}&uniqueChatID=${uniqueChatID}&lowerBoundInclusive=${lowerBound}&upperBoundExclusive=${upperBound}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error fetching chats:', error)
+  }
+}
+
 export const createChat = async (payload) => {
   try {
     const userToken = payload.userToken

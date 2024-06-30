@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
 import { ChatBox } from '../../components/chat/chatComponents'
-import { getChat } from '../../services/chatService'
+import { getChat,getChatRange } from '../../services/chatService'
 
 export function ChatRoom() {
   let [searchParams] = useSearchParams()
@@ -24,8 +24,9 @@ export function ChatRoom() {
   useEffect(() => {
     const fetchChatRoom = async () => {
       const chat = await getChat(ownerToken, uniqueChatID)
+      const chatMessages = await getChatRange(ownerToken, uniqueChatID, 0, 20)
       setChatRoom(chat)
-      setMessages(chat.chatMessages)
+      setMessages(chatMessages)
     }
     fetchChatRoom()
   }, [])
@@ -76,8 +77,8 @@ export function ChatRoom() {
 
         setUserTypingList(userTypingList => {
           const existingUserIndex = userTypingList.findIndex(u => u.userName === user.userName);
-          if(user.userName===auth.getUserDetails().userName)return userTypingList;
-          
+          if (user.userName === auth.getUserDetails().userName) return userTypingList;
+
           if (existingUserIndex !== -1) {
             clearTimeout(typingTimeouts.current[user.userName]);
           } else {
@@ -90,7 +91,7 @@ export function ChatRoom() {
               return updatedList;
             });
           }, 5000);
-    
+
           return userTypingList;
         });
       })
