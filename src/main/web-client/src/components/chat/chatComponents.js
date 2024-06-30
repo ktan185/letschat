@@ -81,84 +81,80 @@ function getChatUrl(chat) {
 }
 
 export function ChatRoomList({ chatlist }) {
-  const [chatRooms, setChatRooms] = useState([]);
+  const [chatRooms, setChatRooms] = useState([])
 
-  const navigate = useNavigate();
-  const SERVER = 'http://localhost:8080';
+  const navigate = useNavigate()
+  const SERVER = 'http://localhost:8080'
 
   useEffect(() => {
-    const subscriptions = chatlist.map(chat => {
-      const chatID = chat.chatID;
-      const ownerToken = chatID.ownerToken;
-      const uniqueChatID = chatID.uniqueChatID;
+    const subscriptions = chatlist.map((chat) => {
+      const chatID = chat.chatID
+      const ownerToken = chatID.ownerToken
+      const uniqueChatID = chatID.uniqueChatID
 
-      const socket = new SockJS(`${SERVER}/chat`);
-      const stompClient = Stomp.over(socket);
+      const socket = new SockJS(`${SERVER}/chat`)
+      const stompClient = Stomp.over(socket)
 
-      stompClient.reconnect_delay = 5000;
-      stompClient.heartbeat.outgoing = 4000;
-      stompClient.heartbeat.incoming = 4000;
+      stompClient.reconnect_delay = 5000
+      stompClient.heartbeat.outgoing = 4000
+      stompClient.heartbeat.incoming = 4000
 
       stompClient.connect({}, function (frame) {
-
         stompClient.subscribe(
           `/topic/numUsers/${ownerToken}${uniqueChatID}`,
           function (userListOutput) {
             const decodedUserList = new TextDecoder().decode(
               userListOutput._binaryBody
-            );
-            const numUsers = JSON.parse(decodedUserList);
+            )
+            const numUsers = JSON.parse(decodedUserList)
 
-            setChatRooms(prevChatRooms => {
-
+            setChatRooms((prevChatRooms) => {
               const existingIndex = prevChatRooms.findIndex(
-                room => room.chatID.ownerToken === ownerToken && room.chatID.uniqueChatID === uniqueChatID
-              );
+                (room) =>
+                  room.chatID.ownerToken === ownerToken &&
+                  room.chatID.uniqueChatID === uniqueChatID
+              )
 
               if (existingIndex !== -1) {
-                const updatedRooms = [...prevChatRooms];
+                const updatedRooms = [...prevChatRooms]
                 updatedRooms[existingIndex] = {
                   ...updatedRooms[existingIndex],
-                  numUsers: numUsers
-                };
-                return updatedRooms;
+                  numUsers: numUsers,
+                }
+                return updatedRooms
               } else {
-                return [...prevChatRooms, { ...chat, numUsers: numUsers }];
+                return [...prevChatRooms, { ...chat, numUsers: numUsers }]
               }
-            });
+            })
           }
-        );
-
+        )
 
         stompClient.send(
           '/app/getNumUsers',
           {},
           JSON.stringify({
             ownerToken: ownerToken,
-            uniqueChatID: uniqueChatID
+            uniqueChatID: uniqueChatID,
           })
-        );
-      });
+        )
+      })
 
-      return stompClient;
-    });
+      return stompClient
+    })
 
     return () => {
-
-      subscriptions.forEach(client => client.disconnect());
-    };
-  }, [chatlist]);
-
+      subscriptions.forEach((client) => client.disconnect())
+    }
+  }, [chatlist])
 
   return (
     <>
       {chatRooms?.length > 0 ? (
-        <ListGroup>
+        <ListGroup className={styles.scrollableList}>
           {chatRooms.map((chat, index) => {
             return (
               <ListGroup.Item
-                as="li"
-                className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
+                className={`d-flex justify-content-between align-items-start`}
                 key={index}
                 action
                 onClick={() => navigate(getChatUrl(chat))}
@@ -212,7 +208,13 @@ function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingList }) {
+export function ChatBox({
+  stompClient,
+  chatRoom,
+  messages,
+  userList,
+  userTypingList,
+}) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
@@ -229,9 +231,9 @@ export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingL
       JSON.stringify({
         chatID: {
           ownerToken: ownerToken,
-          uniqueChatID: uniqueChatID
+          uniqueChatID: uniqueChatID,
         },
-        user: user
+        user: user,
       })
     )
   }
@@ -258,42 +260,46 @@ export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingL
   }
 
   return (
-    <div className={styles.cardContainer}>
-      <Card>
-        Number Of Users Currently Active: {userList.length}
-        <Card.Header>{chatRoom?.chatName}</Card.Header>
-        <Card.Body>
-          <ChatMessages messages={messages} />
-          <div>
-            {userTypingList.length > 0 && (
-              <div>
-                {userTypingList.map((user1, index) => (
-                  <span key={user1.userName}>
-                    {index > 0 && ', '}
-                    {user1.userName}
-                  </span>
-                ))}
-                {userTypingList.length === 1 ? ' is typing...' : ' are typing...'}
-              </div>
-            )}
-          </div>
-          <div className={styles.input}>
-            <Form.Control
-              type="text"
-              value={inputBox}
-              onChange={handleMessageChange}
-            />
-            <Button
-              size="sm"
-              variant="sucess"
-              className={styles.button}
-              onClick={() => sendMessage(inputBox)}
-            >
-              Send
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+    <Card>
+      Number Of Users Currently Active: {userList.length}
+      <Card.Header>{chatRoom?.chatName}</Card.Header>
+      <Card.Body>
+        <ChatMessages messages={messages} />
+        <TypingList list={userTypingList} />
+        <div className={styles.input}>
+          <Form.Control
+            type="text"
+            value={inputBox}
+            onChange={handleMessageChange}
+          />
+          <Button
+            size="sm"
+            variant="sucess"
+            className={styles.button}
+            onClick={() => sendMessage(inputBox)}
+          >
+            Send
+          </Button>
+        </div>
+      </Card.Body>
+    </Card>
+  )
+}
+
+function TypingList({ list }) {
+  return (
+    <div>
+      {list.length > 0 && (
+        <div>
+          {list.map((user1, index) => (
+            <span key={user1.userName}>
+              {index > 0 && ', '}
+              {user1.userName}
+            </span>
+          ))}
+          {list.length === 1 ? ' is typing...' : ' are typing...'}
+        </div>
+      )}
     </div>
   )
 }

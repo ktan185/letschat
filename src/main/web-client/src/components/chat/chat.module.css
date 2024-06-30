@@ -1,15 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
-.listGroupItem {
-  border-radius: 12px;
-  margin-bottom: 2px;
-}
-
 .scrollableList {
   text-align: left;
   width: 70vw;
-  height: 80vh;
-  max-height: 80vh;
+  height: 70vh;
+  max-height: 72vh;
   overflow-y: auto;
   border: 0.1px solid #ddd;
   padding: 0px;
@@ -24,14 +19,6 @@
   margin-top: 5px;
   display: flex;
   flex-direction: row;
-}
-
-.cardContainer {
-  height: 80vh;
-}
-
-.chatName {
-  text-align: left;
 }
 
 .modal {
