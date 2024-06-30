@@ -1,4 +1,4 @@
-import { createChat } from '../../services/chatService'
+import { createChat, deleteChat } from '../../services/chatService'
 import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import Modal from 'react-bootstrap/Modal'
@@ -25,9 +25,9 @@ export function CreateChat(props) {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      createNewChat(e);
+      createNewChat(e)
     }
-  };
+  }
 
   function createNewChat(e) {
     if (chatName === '') {
@@ -43,7 +43,7 @@ export function CreateChat(props) {
       const payload = {
         userToken: user.token,
         chatName: chatName,
-        description: chatDescription
+        description: chatDescription,
       }
       createChat(payload)
       props.onHide(true)
@@ -71,7 +71,7 @@ export function CreateChat(props) {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group controlId="chatName"onKeyDown={handleKeyDown}>
+          <Form.Group controlId="chatName" onKeyDown={handleKeyDown}>
             <Form.Label>Enter a chatroom name</Form.Label>
             <Form.Control
               type="text"
@@ -104,95 +104,109 @@ function getChatUrl(chat) {
 }
 
 export function ChatRoomList({ chatlist }) {
-  const [chatRooms, setChatRooms] = useState([]);
+  const [chatRooms, setChatRooms] = useState([])
+  const [hoveredItem, setHoveredItem] = useState(null)
 
-  const navigate = useNavigate();
-  const SERVER = 'http://localhost:8080';
+  const handleMouseEnter = (index) => {
+    setHoveredItem(index)
+  }
+
+  const handleMouseLeave = () => {
+    setHoveredItem(null)
+  }
+
+  const navigate = useNavigate()
+  const SERVER = 'http://localhost:8080'
 
   useEffect(() => {
-    const subscriptions = chatlist.map(chat => {
-      const chatID = chat.chatID;
-      const ownerToken = chatID.ownerToken;
-      const uniqueChatID = chatID.uniqueChatID;
+    const subscriptions = chatlist.map((chat) => {
+      const chatID = chat.chatID
+      const ownerToken = chatID.ownerToken
+      const uniqueChatID = chatID.uniqueChatID
 
-      const socket = new SockJS(`${SERVER}/chat`);
-      const stompClient = Stomp.over(socket);
+      const socket = new SockJS(`${SERVER}/chat`)
+      const stompClient = Stomp.over(socket)
 
-      stompClient.reconnect_delay = 5000;
-      stompClient.heartbeat.outgoing = 4000;
-      stompClient.heartbeat.incoming = 4000;
+      stompClient.reconnect_delay = 5000
+      stompClient.heartbeat.outgoing = 4000
+      stompClient.heartbeat.incoming = 4000
 
       stompClient.connect({}, function (frame) {
-
         stompClient.subscribe(
           `/topic/numUsers/${ownerToken}${uniqueChatID}`,
           function (userListOutput) {
             const decodedUserList = new TextDecoder().decode(
               userListOutput._binaryBody
-            );
-            const numUsers = JSON.parse(decodedUserList);
+            )
+            const numUsers = JSON.parse(decodedUserList)
 
-            setChatRooms(prevChatRooms => {
-
+            setChatRooms((prevChatRooms) => {
               const existingIndex = prevChatRooms.findIndex(
-                room => room.chatID.ownerToken === ownerToken && room.chatID.uniqueChatID === uniqueChatID
-              );
+                (room) =>
+                  room.chatID.ownerToken === ownerToken &&
+                  room.chatID.uniqueChatID === uniqueChatID
+              )
 
               if (existingIndex !== -1) {
-                const updatedRooms = [...prevChatRooms];
+                const updatedRooms = [...prevChatRooms]
                 updatedRooms[existingIndex] = {
                   ...updatedRooms[existingIndex],
-                  numUsers: numUsers
-                };
-                return updatedRooms;
+                  numUsers: numUsers,
+                }
+                return updatedRooms
               } else {
-                return [...prevChatRooms, { ...chat, numUsers: numUsers }];
+                return [...prevChatRooms, { ...chat, numUsers: numUsers }]
               }
-            });
+            })
           }
-        );
-
+        )
 
         stompClient.send(
           '/app/getNumUsers',
           {},
           JSON.stringify({
             ownerToken: ownerToken,
-            uniqueChatID: uniqueChatID
+            uniqueChatID: uniqueChatID,
           })
-        );
-      });
+        )
+      })
 
-      return stompClient;
-    });
+      return stompClient
+    })
 
     return () => {
-
-      subscriptions.forEach(client => client.disconnect());
-    };
-  }, [chatlist]);
-
+      subscriptions.forEach((client) => client.disconnect())
+    }
+  }, [chatlist])
 
   return (
     <>
       {chatRooms?.length > 0 ? (
-        <ListGroup>
+        <ListGroup className={styles.scrollableList}>
           {chatRooms.map((chat, index) => {
             return (
               <ListGroup.Item
-                as="li"
-                className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
+                className={`d-flex justify-content-between align-items-start`}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
                 key={index}
                 action
                 onClick={() => navigate(getChatUrl(chat))}
               >
                 <div className="ms-2 me-auto">
                   <div className="fw-bold">{chat.chatName}</div>
-                  description: {chat.description}
+                  Description: {chat.description}
                 </div>
-                <Badge bg="primary" pill>
-                  users chatting: {chat.numUsers}
-                </Badge>
+                <div className={styles.badgeContainer}>
+                  <Badge bg="primary" pill>
+                    users chatting: {chat.numUsers}
+                  </Badge>
+                  <DeleteChatButton
+                    index={index}
+                    hoveredItem={hoveredItem}
+                    chat={chat}
+                  />
+                </div>
               </ListGroup.Item>
             )
           })}
@@ -217,12 +231,9 @@ function ChatMessages({ messages }) {
     <ListGroup className={styles.scrollableList} ref={listRef}>
       {messages?.length > 0 ? (
         messages.map((chat, index) => (
-          <ListGroup.Item
-            key={index}
-            className={`d-flex justify-content-between align-items-start`}
-          >
-            <div className="ms-2 me-auto">
-              <div className="fw-bold">{chat.from}</div>
+          <ListGroup.Item key={index} className={styles.chatMessageContainer}>
+            <div className={styles.text}>
+              <div className={styles.title}>{chat.from}</div>
               {chat.text}
             </div>
             <Badge>{`Sent at ${chat.time}`}</Badge>
@@ -235,7 +246,13 @@ function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingList }) {
+export function ChatBox({
+  stompClient,
+  chatRoom,
+  messages,
+  userList,
+  userTypingList,
+}) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
@@ -252,19 +269,19 @@ export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingL
       JSON.stringify({
         chatID: {
           ownerToken: ownerToken,
-          uniqueChatID: uniqueChatID
+          uniqueChatID: uniqueChatID,
         },
-        user: user
+        user: user,
       })
     )
   }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage(inputBox);
+      e.preventDefault()
+      sendMessage(inputBox)
     }
-  };
+  }
 
   function sendMessage(message) {
     if (message === '') return
@@ -288,43 +305,79 @@ export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingL
   }
 
   return (
-    <div className={styles.cardContainer}>
-      <Card>
-        Number Of Users Currently Active: {userList.length}
-        <Card.Header>{chatRoom?.chatName}</Card.Header>
-        <Card.Body>
-          <ChatMessages messages={messages} />
-          <div>
-            {userTypingList.length > 0 && (
-              <div>
-                {userTypingList.map((user1, index) => (
-                  <span key={user1.userName}>
-                    {index > 0 && ', '}
-                    {user1.userName}
-                  </span>
-                ))}
-                {userTypingList.length === 1 ? ' is typing...' : ' are typing...'}
-              </div>
-            )}
-          </div>
-          <div className={styles.input}>
-            <Form.Control
-              type="text"
-              value={inputBox}
-              onChange={handleMessageChange}
-              onKeyDown={handleKeyDown}
-            />
-            <Button
-              size="sm"
-              variant="sucess"
-              className={styles.button}
-              onClick={() => sendMessage(inputBox)}
-            >
-              Send
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
+    <Card>
+      Number Of Users Currently Active: {userList.length}
+      <Card.Header>{chatRoom?.chatName}</Card.Header>
+      <Card.Body>
+        <ChatMessages messages={messages} />
+        <TypingList list={userTypingList} />
+        <div className={styles.input}>
+          <Form.Control
+            type="text"
+            value={inputBox}
+            onChange={handleMessageChange}
+            onKeyDown={handleKeyDown}
+          />
+          <Button
+            size="sm"
+            variant="sucess"
+            className={styles.button}
+            onClick={() => sendMessage(inputBox)}
+          >
+            Send
+          </Button>
+        </div>
+      </Card.Body>
+    </Card>
+  )
+}
+
+function TypingList({ list }) {
+  return (
+    <div>
+      {list.length > 0 && (
+        <div>
+          {list.map((user1, index) => (
+            <span key={user1.userName}>
+              {index > 0 && ', '}
+              {user1.userName}
+            </span>
+          ))}
+          {list.length === 1 ? ' is typing...' : ' are typing...'}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DeleteChatButton({ index, hoveredItem, chat }) {
+  const auth = useAuth()
+  const user = auth.getUserDetails()
+
+  const handleDelete = async (e) => {
+    e.stopPropagation()
+    const token = user.token
+    const uniqueChatID = chat.chatID.uniqueChatID
+    try {
+      await deleteChat(token, uniqueChatID)
+      alert('Chat has been deleted!')
+    } catch (err) {
+      alert('Something when wrong...')
+    }
+  }
+
+  return (
+    <div className={styles.deleteContainer} onClick={handleDelete}>
+      {hoveredItem === index && user.token === chat.chatID.ownerToken && (
+        <>
+          <p>Delete chat? </p>
+          <img
+            className={styles.delete}
+            src="/delete.png"
+            alt="Delete Chat"
+          ></img>
+        </>
+      )}
     </div>
   )
 }
