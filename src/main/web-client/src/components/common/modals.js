@@ -5,9 +5,11 @@ const ConfirmModal = ({ show, handleClose, handleConfirm }) => {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Confirm Action</Modal.Title>
+        <Modal.Title>Confirmation!</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to proceed?</Modal.Body>
+      <Modal.Body>
+        Are you sure you want to delete this chat? This action cannot be undone!
+      </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cancel
