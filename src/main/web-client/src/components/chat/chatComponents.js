@@ -184,7 +184,7 @@ export function ChatRoomList({ chatlist }) {
               >
                 <div className="ms-2 me-auto">
                   <div className="fw-bold">{chat.chatName}</div>
-                  description: {chat.description}
+                  Description: {chat.description}
                 </div>
                 <Badge bg="primary" pill>
                   users chatting: {chat.numUsers}
