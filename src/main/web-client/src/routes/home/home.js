@@ -15,7 +15,7 @@ function Home() {
     const chatsData = await getAllChats()
     setChatList(chatsData)
   }
-  
+
   useEffect(() => {
     fetchChats()
   }, [])
@@ -24,7 +24,11 @@ function Home() {
     <div className={styles.container}>
       <div className={styles.chats}>
         <h1>Join a chat room!</h1>
-        <CreateChat fetchChats={fetchChats} show={showModal} onHide={() => setShowModal(false)} />
+        <CreateChat
+          fetchChats={fetchChats}
+          show={showModal}
+          onHide={() => setShowModal(false)}
+        />
         <ChatRoomList chatlist={chatList} />
         <div className={styles.createChatButton}>
           <Button variant="primary" onClick={() => setShowModal(true)}>

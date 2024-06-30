@@ -18,7 +18,14 @@ const AuthProvider = ({ children }) => {
         navigate('/home')
       }
     } catch (err) {
-      console.error(err)
+      const status = err.response.status
+      if (status === 404) {
+        alert('The username or email address does not exist!')
+      } else if (status === 400) {
+        alert('The password entered is incorrect!')
+      } else {
+        alert('Something went wrong, please try again')
+      }
     }
   }
 

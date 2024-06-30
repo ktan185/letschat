@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
-import { validateEmail } from './utils/login'
+import { detailsValidation, validateEmail } from './utils/login'
 import { signUp } from '../../services/authService'
 import { useAuth } from '../../contexts/AuthProvider'
 import styles from './login.module.css'
+import PasswordStrengthBar from 'react-password-strength-bar'
 
 export function SignInSignUpCard({ isSignUpCard, toggleSignUp }) {
   const [showCard, setShowCard] = useState(isSignUpCard)
@@ -17,7 +18,6 @@ export function SignInSignUpCard({ isSignUpCard, toggleSignUp }) {
       setShowCard(isSignUpCard)
       setAnimateClass(styles.fadeIn)
     }, 500)
-
     return () => clearTimeout(timeoutId)
   }, [isSignUpCard])
 
@@ -42,13 +42,7 @@ function LoginForm({ toggleSignUp }) {
     const payload = validateEmail(userName)
       ? { email: userName, password: password }
       : { userName: userName, password: password }
-
-    try {
-      // call login API to attempt to sign in
-      auth.loginAction(payload)
-    } catch (err) {
-      alert('The login details you provided are incorrect!')
-    }
+    auth.loginAction(payload)
   }
 
   const handleUserNameChange = (e) => {
@@ -59,9 +53,9 @@ function LoginForm({ toggleSignUp }) {
     setPassword(e.target.value)
   }
 
-  const handleKeyDown=(e)=>{
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      handleSignIn(e);
+      handleSignIn(e)
     }
   }
 
@@ -111,6 +105,7 @@ function SignUpForm({ toggleSignUp }) {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
+  const [showPassword, setShowPassword] = useState('')
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -140,8 +135,7 @@ function SignUpForm({ toggleSignUp }) {
       firstName: firstName,
       lastName: lastName,
     }
-
-    // We will add some frontend form checking logic here later.
+    if (!detailsValidation(newUser)) return
 
     try {
       await signUp(newUser)
@@ -171,27 +165,6 @@ function SignUpForm({ toggleSignUp }) {
             />
           </Form.Group>
           <div className={styles.inputContainer}>
-            <Form.Group className="mb-2" controlId="userName">
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="E.g. johnsmith123"
-                value={userName}
-                onChange={handleUserNameChange}
-              />
-            </Form.Group>
-            <Form.Group className="mb-2" controlId="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="######"
-                value={password}
-                onChange={handlePasswordChange}
-              />
-            </Form.Group>
-          </div>
-          <div className={styles.inputContainer}>
             <Form.Group className="mb-2" controlId="firstName">
               <Form.Label>First Name</Form.Label>
               <Form.Control
@@ -210,6 +183,32 @@ function SignUpForm({ toggleSignUp }) {
                 onChange={handleLastNameChange}
               />
             </Form.Group>
+          </div>
+          <Form.Group className="mb-2" controlId="userName">
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="E.g. johnsmith123"
+              value={userName}
+              onChange={handleUserNameChange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-2" controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              required
+              type={showPassword ? 'text' : 'password'}
+              placeholder="######"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </Form.Group>
+          <div className={styles.password}>
+            <PasswordStrengthBar password={password} />
+            <Form.Check
+              label={`Show Password`}
+              onChange={() => setShowPassword(!showPassword)}
+            ></Form.Check>
           </div>
           <div className={styles.submitButtonContainer}>
             <Button variant="primary" onClick={handleSignUp}>

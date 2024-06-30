@@ -35,13 +35,16 @@ public class UserService {
   public boolean checkPassword(User attemptedLogin) {
     User existingUserToCheck = getUserProfile(attemptedLogin);
     String pwdToCheck = attemptedLogin.getPassword();
-    
-    // If there's no record of the user in our database, return false.
+    String hashedPwd = existingUserToCheck.getPassword();
+    return BCrypt.checkpw(pwdToCheck, hashedPwd);
+  }
+
+  public boolean checkUserExists(User attemptedLogin) {
+    User existingUserToCheck = getUserProfile(attemptedLogin);
     if (existingUserToCheck == null) {
       return false;
     }
-    String hashedPwd = existingUserToCheck.getPassword();
-    return BCrypt.checkpw(pwdToCheck, hashedPwd);
+    return true;
   }
 
   public User getUserProfile(User user) {

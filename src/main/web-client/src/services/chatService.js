@@ -46,3 +46,14 @@ export const createChat = async (payload) => {
     console.error('Error creating a new chat!')
   }
 }
+
+export const deleteChat = async (token, uniqueChatID) => {
+  try {
+    const response = await axios.delete(
+      `${SERVER_PORT}/api/deleteChat?token=${token}&uniqueChatID=${uniqueChatID}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error deleting chat: ', error)
+  }
+}
