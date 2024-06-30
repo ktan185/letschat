@@ -11,7 +11,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import SockJS from 'sockjs-client'
 import { Stomp } from '@stomp/stompjs'
 import { getChatRange } from '../../services/chatService'
-
+import ConfirmModal from '../common/modals'
+import TextareaAutosize from 'react-textarea-autosize'
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
@@ -72,8 +73,8 @@ export function CreateChat(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
-          <Form.Group controlId="chatName" onKeyDown={handleKeyDown}>
+        <Form onKeyDown={handleKeyDown}>
+          <Form.Group controlId="chatName">
             <Form.Label>Enter a chatroom name</Form.Label>
             <Form.Control
               type="text"
@@ -82,6 +83,8 @@ export function CreateChat(props) {
               onChange={handleChatNameChange}
             />
             <Form.Label>Enter the description</Form.Label>
+          </Form.Group>
+          <Form.Group controlId="chatDescription">
             <Form.Control
               type="text"
               placeholder="Chat room description"
@@ -226,7 +229,7 @@ function ChatMessages({
   setLowerBound,
   setUpperBound,
   upperBound,
-  increment
+  increment,
 }) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
@@ -240,39 +243,49 @@ function ChatMessages({
 
   const handleScroll = async (e) => {
     if (e.currentTarget.scrollTop === 0) {
-      const newLowerBound = upperBound;
-      const newUpperBound = upperBound + increment;
-      setLowerBound(newLowerBound);
-      setUpperBound(newUpperBound);
+      const newLowerBound = upperBound
+      const newUpperBound = upperBound + increment
+      setLowerBound(newLowerBound)
+      setUpperBound(newUpperBound)
 
-      const chatMessages = await getChatRange(ownerToken, uniqueChatID, newLowerBound, newUpperBound);
+      const chatMessages = await getChatRange(
+        ownerToken,
+        uniqueChatID,
+        newLowerBound,
+        newUpperBound
+      )
 
       if (chatMessages && chatMessages.length > 0) {
-
         if (listRef.current) {
-          const prevScrollHeight = listRef.current.scrollHeight;
+          const prevScrollHeight = listRef.current.scrollHeight
 
-          setMessages((prevMessages) => chatMessages.concat(prevMessages));
-
+          setMessages((prevMessages) => chatMessages.concat(prevMessages))
 
           setTimeout(() => {
             if (listRef.current) {
-              const newScrollHeight = listRef.current.scrollHeight;
-              const scrollHeightIncrease = newScrollHeight - prevScrollHeight;
+              const newScrollHeight = listRef.current.scrollHeight
+              const scrollHeightIncrease = newScrollHeight - prevScrollHeight
 
-              listRef.current.scrollTop = scrollHeightIncrease;
+              listRef.current.scrollTop = scrollHeightIncrease
             }
-          }, 0); 
+          }, 0)
         }
       }
     }
-  };
+  }
 
   return (
-    <ListGroup className={styles.scrollableList} ref={listRef} onScroll={handleScroll}>
+    <ListGroup
+      className={styles.scrollableList}
+      ref={listRef}
+      onScroll={handleScroll}
+    >
       {messages?.length > 0 ? (
         messages.map((chat, index) => (
-          <ListGroup.Item key={index} className={styles.chatMessageContainer}>
+          <ListGroup.Item
+            key={index}
+            className={`d-flex justify-content-between align-items-start ${styles.chatMessageContainer}`}
+          >
             <div className={styles.text}>
               <div className={styles.title}>{chat.from}</div>
               {chat.text}
@@ -297,7 +310,7 @@ export function ChatBox({
   setLowerBound,
   setUpperBound,
   upperBound,
-  increment
+  increment,
 }) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
@@ -361,18 +374,21 @@ export function ChatBox({
           setLowerBound={setLowerBound}
           setUpperBound={setUpperBound}
           upperBound={upperBound}
-          increment={increment} />
+          increment={increment}
+        />
         <TypingList list={userTypingList} />
-        <div className={styles.input}>
-          <Form.Control
-            type="text"
+        <div className={styles.inputContainer}>
+          <TextareaAutosize
+            className={styles.inputBox}
             value={inputBox}
             onChange={handleMessageChange}
             onKeyDown={handleKeyDown}
+            minRows={1}
+            maxRows={5}
+            placeholder="Send a message..."
           />
           <Button
             size="sm"
-            variant="sucess"
             className={styles.button}
             onClick={() => sendMessage(inputBox)}
           >
@@ -405,21 +421,34 @@ function TypingList({ list }) {
 function DeleteChatButton({ index, hoveredItem, chat }) {
   const auth = useAuth()
   const user = auth.getUserDetails()
+  const [modalShow, setModalShow] = useState(false)
+  const handleClose = () => setModalShow(!modalShow)
 
-  const handleDelete = async (e) => {
+  const handleShow = (e) => {
     e.stopPropagation()
+    setModalShow(!modalShow)
+  }
+
+  const handleConfirm = async () => {
     const token = user.token
     const uniqueChatID = chat.chatID.uniqueChatID
     try {
       await deleteChat(token, uniqueChatID)
+      window.location.reload()
       alert('Chat has been deleted!')
     } catch (err) {
       alert('Something when wrong...')
     }
+    setModalShow(false)
   }
 
   return (
-    <div className={styles.deleteContainer} onClick={handleDelete}>
+    <div className={styles.deleteContainer} onClick={handleShow}>
+      <ConfirmModal
+        show={modalShow}
+        handleClose={handleClose}
+        handleConfirm={handleConfirm}
+      />
       {hoveredItem === index && user.token === chat.chatID.ownerToken && (
         <>
           <p>Delete chat? </p>
