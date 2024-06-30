@@ -16,13 +16,18 @@ export function CreateChat(props) {
   const [chatDescription, setChatDescription] = useState('')
   const auth = useAuth()
   const user = auth.getUserDetails()
-  const navigate = useNavigate()
   const handleChatNameChange = (e) => {
     setChatName(e.target.value)
   }
   const handleChatDescriptionChange = (e) => {
     setChatDescription(e.target.value)
   }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      createNewChat(e);
+    }
+  };
 
   function createNewChat(e) {
     if (chatName === '') {
@@ -66,7 +71,7 @@ export function CreateChat(props) {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group controlId="chatName">
+          <Form.Group controlId="chatName"onKeyDown={handleKeyDown}>
             <Form.Label>Enter a chatroom name</Form.Label>
             <Form.Control
               type="text"
@@ -254,6 +259,13 @@ export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingL
     )
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage(inputBox);
+    }
+  };
+
   function sendMessage(message) {
     if (message === '') return
 
@@ -300,6 +312,7 @@ export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingL
               type="text"
               value={inputBox}
               onChange={handleMessageChange}
+              onKeyDown={handleKeyDown}
             />
             <Button
               size="sm"
