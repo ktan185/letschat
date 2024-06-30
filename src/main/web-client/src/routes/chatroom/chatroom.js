@@ -19,7 +19,7 @@ export function ChatRoom() {
   const SERVER = 'http://localhost:8080'
   const [messages, setMessages] = useState([])
   const [stompClient, setStompClient] = useState(null)
-  const typingTimeouts = useRef({});
+  const typingTimeouts = useRef({})
 
   useEffect(() => {
     const fetchChatRoom = async () => {
@@ -45,7 +45,7 @@ export function ChatRoom() {
           const decodedUserList = new TextDecoder().decode(
             userListOutput._binaryBody
           )
-          const tempUserList = JSON.parse(decodedUserList);
+          const tempUserList = JSON.parse(decodedUserList)
           setUserList(tempUserList)
         }
       )
@@ -55,9 +55,9 @@ export function ChatRoom() {
         JSON.stringify({
           chatID: {
             ownerToken: ownerToken,
-            uniqueChatID: uniqueChatID
+            uniqueChatID: uniqueChatID,
           },
-          user: user
+          user: user,
         })
       )
       tempStompClient.subscribe(
@@ -70,29 +70,36 @@ export function ChatRoom() {
           setMessages((messages) => [...messages, messageJSON])
         }
       )
-      tempStompClient.subscribe(`/topic/typing/${ownerToken}${uniqueChatID}`, function (userOutput) {
-        const userMessage = new TextDecoder().decode(userOutput._binaryBody)
-        const user = JSON.parse(userMessage)
+      tempStompClient.subscribe(
+        `/topic/typing/${ownerToken}${uniqueChatID}`,
+        function (userOutput) {
+          const userMessage = new TextDecoder().decode(userOutput._binaryBody)
+          const user = JSON.parse(userMessage)
 
-        setUserTypingList(userTypingList => {
-          const existingUserIndex = userTypingList.findIndex(u => u.userName === user.userName);
+          setUserTypingList((userTypingList) => {
+            const existingUserIndex = userTypingList.findIndex(
+              (u) => u.userName === user.userName
+            )
 
-          if (existingUserIndex !== -1) {
-            clearTimeout(typingTimeouts.current[user.userName]);
-          } else {
-            userTypingList = [...userTypingList, user];
-          }
+            if (existingUserIndex !== -1) {
+              clearTimeout(typingTimeouts.current[user.userName])
+            } else {
+              userTypingList = [...userTypingList, user]
+            }
 
-          typingTimeouts.current[user.userName] = setTimeout(() => {
-            setUserTypingList(userTypingList => {
-              const updatedList = userTypingList.filter(u => u.userName !== user.userName);
-              return updatedList;
-            });
-          }, 5000);
-    
-          return userTypingList;
-        });
-      })
+            typingTimeouts.current[user.userName] = setTimeout(() => {
+              setUserTypingList((userTypingList) => {
+                const updatedList = userTypingList.filter(
+                  (u) => u.userName !== user.userName
+                )
+                return updatedList
+              })
+            }, 5000)
+
+            return userTypingList
+          })
+        }
+      )
     })
     return () => {
       if (tempStompClient) {
