@@ -109,7 +109,6 @@ export function ChatRoomList({ chatlist }) {
             );
             const numUsers = JSON.parse(decodedUserList);
 
-            console.log(numUsers)
             setChatRooms(prevChatRooms => {
 
               const existingIndex = prevChatRooms.findIndex(
@@ -156,23 +155,24 @@ export function ChatRoomList({ chatlist }) {
       {chatRooms?.length > 0 ? (
         <ListGroup>
           {chatRooms.map((chat, index) => {
-            return(
-            <ListGroup.Item
-              as="li"
-              className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
-              key={index}
-              action
-              onClick={() => navigate(getChatUrl(chat))}
-            >
-              <div className="ms-2 me-auto">
-                <div className="fw-bold">{chat.chatName}</div>
-                description
-              </div>
-              <Badge bg="primary" pill>
-                users chatting: {chat.numUsers}
-              </Badge>
-            </ListGroup.Item>
-          )})}
+            return (
+              <ListGroup.Item
+                as="li"
+                className={`d-flex justify-content-between align-items-start ${styles.listGroupItem}`}
+                key={index}
+                action
+                onClick={() => navigate(getChatUrl(chat))}
+              >
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">{chat.chatName}</div>
+                  description
+                </div>
+                <Badge bg="primary" pill>
+                  users chatting: {chat.numUsers}
+                </Badge>
+              </ListGroup.Item>
+            )
+          })}
         </ListGroup>
       ) : (
         <h2>No Chats Available</h2>
@@ -212,7 +212,7 @@ function ChatMessages({ messages }) {
   )
 }
 
-export function ChatBox({ stompClient, chatRoom, messages, userList }) {
+export function ChatBox({ stompClient, chatRoom, messages, userList, userTypingList }) {
   let [searchParams] = useSearchParams()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
@@ -223,6 +223,17 @@ export function ChatBox({ stompClient, chatRoom, messages, userList }) {
   const handleMessageChange = (e) => {
     e.preventDefault()
     setInputBox(e.target.value)
+    stompClient.send(
+      '/app/typing',
+      {},
+      JSON.stringify({
+        chatID: {
+          ownerToken: ownerToken,
+          uniqueChatID: uniqueChatID
+        },
+        user: user
+      })
+    )
   }
 
   function sendMessage(message) {
@@ -253,6 +264,19 @@ export function ChatBox({ stompClient, chatRoom, messages, userList }) {
         <Card.Header>{chatRoom?.chatName}</Card.Header>
         <Card.Body>
           <ChatMessages messages={messages} />
+          <div>
+            {userTypingList.length > 0 && (
+              <div>
+                {userTypingList.map((user1, index) => (
+                  <span key={user1.userName}>
+                    {index > 0 && ', '}
+                    {user1.userName}
+                  </span>
+                ))}
+                {userTypingList.length === 1 ? ' is typing...' : ' are typing...'}
+              </div>
+            )}
+          </div>
           <div className={styles.input}>
             <Form.Control
               type="text"
