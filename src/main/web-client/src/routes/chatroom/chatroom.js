@@ -76,7 +76,8 @@ export function ChatRoom() {
 
         setUserTypingList(userTypingList => {
           const existingUserIndex = userTypingList.findIndex(u => u.userName === user.userName);
-
+          if(user.userName===auth.getUserDetails().userName)return userTypingList;
+          
           if (existingUserIndex !== -1) {
             clearTimeout(typingTimeouts.current[user.userName]);
           } else {

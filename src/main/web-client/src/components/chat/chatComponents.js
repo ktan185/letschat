@@ -13,11 +13,15 @@ import { Stomp } from '@stomp/stompjs'
 
 export function CreateChat(props) {
   const [chatName, setChatName] = useState('')
+  const [chatDescription, setChatDescription] = useState('')
   const auth = useAuth()
   const user = auth.getUserDetails()
-
+  const navigate = useNavigate()
   const handleChatNameChange = (e) => {
     setChatName(e.target.value)
+  }
+  const handleChatDescriptionChange = (e) => {
+    setChatDescription(e.target.value)
   }
 
   function createNewChat(e) {
@@ -25,16 +29,23 @@ export function CreateChat(props) {
       alert('Please enter a room name!')
       return
     }
+    if (chatDescription === '') {
+      alert('Please enter a description!')
+      return
+    }
     e.preventDefault()
     try {
       const payload = {
         userToken: user.token,
         chatName: chatName,
+        description: chatDescription
       }
       createChat(payload)
       props.onHide(true)
       setChatName('')
+      setChatDescription('')
       alert('You have sucessfully created a new chat!')
+      props.fetchChats()
     } catch (err) {
       console.error(err)
     }
@@ -62,6 +73,13 @@ export function CreateChat(props) {
               placeholder="Chat room name"
               value={chatName}
               onChange={handleChatNameChange}
+            />
+            <Form.Label>Enter the description</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Chat room description"
+              value={chatDescription}
+              onChange={handleChatDescriptionChange}
             />
           </Form.Group>
         </Form>
@@ -165,7 +183,7 @@ export function ChatRoomList({ chatlist }) {
               >
                 <div className="ms-2 me-auto">
                   <div className="fw-bold">{chat.chatName}</div>
-                  description
+                  description: {chat.description}
                 </div>
                 <Badge bg="primary" pill>
                   users chatting: {chat.numUsers}
