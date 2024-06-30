@@ -169,27 +169,27 @@ function SignUpForm({ toggleSignUp }) {
               value={email}
               onChange={handleEmailChange}
             />
-            <div className={styles.inputContainer}>
-              <Form.Group className="mb-2" controlId="firstName">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="E.g. John"
-                  value={firstName}
-                  onChange={handleFirstNameChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-2" controlId="lastName">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="E.g. Smith"
-                  value={lastName}
-                  onChange={handleLastNameChange}
-                />
-              </Form.Group>
-            </div>
           </Form.Group>
+          <div className={styles.inputContainer}>
+            <Form.Group className="mb-2" controlId="firstName">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="E.g. John"
+                value={firstName}
+                onChange={handleFirstNameChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2" controlId="lastName">
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="E.g. Smith"
+                value={lastName}
+                onChange={handleLastNameChange}
+              />
+            </Form.Group>
+          </div>
           <Form.Group className="mb-2" controlId="userName">
             <Form.Label>Username</Form.Label>
             <Form.Control

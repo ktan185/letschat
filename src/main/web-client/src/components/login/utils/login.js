@@ -5,29 +5,35 @@ export function validateEmail(email) {
 }
 
 export function detailsValidation(userDetails) {
+  if (userDetails.email === '') {
+    alert('Please do not leave any fields blank.')
+    return false
+  }
+
+  if (userDetails.firstName === '') {
+    alert('Please include your first name.')
+    return false
+  }
+
+  if (userDetails.lastName === '') {
+    alert('Please include your last name.')
+    return false
+  }
+
+  if (userDetails.userName === '') {
+    alert('Please include your a username.')
+    return false
+  }
+
+  if (userDetails.password === '') {
+    alert('Your password cannot be empty.')
+    return false
+  }
+
   if (!validateEmail(userDetails.email)) {
     alert('Please insert a valid email address.')
     return false
   }
 
-  if (userDetails.firstName === '') {
-    alert('Please include your first name')
-    return false
-  }
-
-  if (userDetails.lastName === '') {
-    alert('Please include your last name')
-    return false
-  }
-
-  if (userDetails.userName === '') {
-    alert('Please include your a username')
-    return false
-  }
-
-  if (userDetails.password === '') {
-    alert('Your password cannot be empty')
-    return false
-  }
   return true
 }
