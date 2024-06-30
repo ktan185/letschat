@@ -25,7 +25,7 @@ export const getChat = async (ownerToken, uniqueChatID) => {
 export const createChat = async (payload) => {
   try {
     const userToken = payload.userToken
-    const body = payload.chatName
+    const body = payload
     const response = await axios.post(
       `${SERVER_PORT}/api/addChat?userToken=${userToken}`,
       body

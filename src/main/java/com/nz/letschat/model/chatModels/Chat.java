@@ -19,8 +19,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Chat {
 
-    public Chat(String chatName, String userToken) {
+    public Chat(String chatName, String description, String userToken) {
         this.chatName = chatName;
+        this.description=description;
         String uuid = UUID.randomUUID().toString();
         this.setChatID(new ChatID(userToken, uuid.substring(uuid.length() - 10)));
         this.chatMessages = new ArrayList<Message>();
@@ -30,6 +31,8 @@ public class Chat {
     ChatID chatID;
 
     String chatName;
+
+    String description;
 
     List<Message> chatMessages;
 

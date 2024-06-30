@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.nz.letschat.model.Message;
@@ -26,10 +25,10 @@ public class ChatController {
     ChatService chatService;
 
     @PostMapping("/api/addChat")
-    public ResponseEntity<?> addChat(@RequestBody String chatName, @RequestParam String userToken) {
+    public ResponseEntity<?> addChat(@RequestBody Chat newChat, @RequestParam String userToken) {
 
         try {
-            Chat chat = new Chat(chatName, userToken);
+            Chat chat = new Chat(newChat.getChatName(), newChat.getDescription(), userToken);
             chatRepository.save(chat);
             return ResponseEntity.ok(chat);
         } catch (Exception e) {
@@ -90,15 +89,15 @@ public class ChatController {
     }
 
     @DeleteMapping("/api/deleteChat")
-    public ResponseEntity<?> deleteChat(@RequestParam String token, @RequestParam String uniqueChatID){
-        try{
-            ChatID chatID=new ChatID(token,uniqueChatID);
-            if(!chatRepository.existsByChatID(chatID)){
+    public ResponseEntity<?> deleteChat(@RequestParam String token, @RequestParam String uniqueChatID) {
+        try {
+            ChatID chatID = new ChatID(token, uniqueChatID);
+            if (!chatRepository.existsByChatID(chatID)) {
                 return ResponseEntity.badRequest().body("Error wrong user token and unique chat ID");
             }
             chatRepository.deleteOneByChatID(chatID);
             return ResponseEntity.ok("Successfully Deleted");
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e);
         }
     }

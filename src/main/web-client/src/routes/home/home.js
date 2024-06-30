@@ -11,11 +11,12 @@ function Home() {
   const [chatList, setChatList] = useState([])
   const [showModal, setShowModal] = useState(false)
 
+  const fetchChats = async () => {
+    const chatsData = await getAllChats()
+    setChatList(chatsData)
+  }
+  
   useEffect(() => {
-    const fetchChats = async () => {
-      const chatsData = await getAllChats()
-      setChatList(chatsData)
-    }
     fetchChats()
   }, [])
 
@@ -23,7 +24,7 @@ function Home() {
     <div className={styles.container}>
       <div className={styles.chats}>
         <h1>Join a chat room!</h1>
-        <CreateChat show={showModal} onHide={() => setShowModal(false)} />
+        <CreateChat fetchChats={fetchChats} show={showModal} onHide={() => setShowModal(false)} />
         <ChatRoomList chatlist={chatList} />
         <div className={styles.createChatButton}>
           <Button variant="primary" onClick={() => setShowModal(true)}>
