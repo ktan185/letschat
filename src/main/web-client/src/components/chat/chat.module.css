@@ -24,3 +24,21 @@
 .modal {
   font-family: 'Pixelify Sans', sans-serif;
 }
+
+.chatMessageContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.text {
+  overflow-wrap: break-word;
+  flex: 1;
+  white-space: pre-wrap;
+}

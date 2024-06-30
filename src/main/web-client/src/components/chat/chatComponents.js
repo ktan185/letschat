@@ -213,12 +213,9 @@ function ChatMessages({ messages }) {
     <ListGroup className={styles.scrollableList} ref={listRef}>
       {messages?.length > 0 ? (
         messages.map((chat, index) => (
-          <ListGroup.Item
-            key={index}
-            className={`d-flex justify-content-between align-items-start`}
-          >
-            <div className="ms-2 me-auto">
-              <div className="fw-bold">{chat.from}</div>
+          <ListGroup.Item key={index} className={styles.chatMessageContainer}>
+            <div className={styles.text}>
+              <div className={styles.title}>{chat.from}</div>
               {chat.text}
             </div>
             <Badge>{`Sent at ${chat.time}`}</Badge>
