@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
 import { ChatBox } from '../../components/chat/chatComponents'
-import { getChat } from '../../services/chatService'
+import { getChat,getChatRange } from '../../services/chatService'
 
 export function ChatRoom() {
   let [searchParams] = useSearchParams()
@@ -19,13 +19,17 @@ export function ChatRoom() {
   const SERVER = 'http://localhost:8080'
   const [messages, setMessages] = useState([])
   const [stompClient, setStompClient] = useState(null)
+  const increment=15
+  const [lowerBound,setLowerBound]=useState(0)
+  const [upperBound,setUpperBound]=useState(increment)
   const typingTimeouts = useRef({})
 
   useEffect(() => {
     const fetchChatRoom = async () => {
       const chat = await getChat(ownerToken, uniqueChatID)
+      const chatMessages = await getChatRange(ownerToken, uniqueChatID, lowerBound, upperBound)
       setChatRoom(chat)
-      setMessages(chat.chatMessages)
+      setMessages(chatMessages)
     }
     fetchChatRoom()
   }, [])
@@ -116,9 +120,14 @@ export function ChatRoom() {
         <ChatBox
           chatRoom={chatRoom}
           stompClient={stompClient}
-          messages={messages}
           userList={userList}
           userTypingList={userTypingList}
+          setMessages ={setMessages}
+          messages={messages}
+          setLowerBound={setLowerBound}
+          setUpperBound={setUpperBound}
+          upperBound={upperBound}
+          increment={increment}
         />
       </div>
     </>
