@@ -301,6 +301,7 @@ export function ChatBox({
             type="text"
             value={inputBox}
             onChange={handleMessageChange}
+            onKeyDown={handleKeyDown}
           />
           <Button
             size="sm"
