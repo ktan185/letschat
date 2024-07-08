@@ -182,7 +182,7 @@ export function ChatRoomList({ chatlist }) {
     return () => {
       subscriptions.forEach((client) => client.disconnect())
     }
-  }, [chatlist])
+  }, [chatlist, SERVER])
 
   return (
     <>
