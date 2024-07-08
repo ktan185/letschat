@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Stomp } from '@stomp/stompjs'
 import { useAuth } from '../../contexts/AuthProvider'
 import { ChatBox } from '../../components/chat/chatComponents'
-import { getChat,getChatRange } from '../../services/chatService'
+import { getChat, getChatRange } from '../../services/chatService'
 
 export function ChatRoom() {
   let [searchParams] = useSearchParams()
@@ -16,18 +16,23 @@ export function ChatRoom() {
   const user = auth.getUserDetails()
   const ownerToken = searchParams.get('ownerToken')
   const uniqueChatID = searchParams.get('uniqueChatID')
-  const SERVER = 'http://localhost:8080'
+  const SERVER = process.env.REACT_APP_API_URL
   const [messages, setMessages] = useState([])
   const [stompClient, setStompClient] = useState(null)
-  const increment=15
-  const [lowerBound,setLowerBound]=useState(0)
-  const [upperBound,setUpperBound]=useState(increment)
+  const increment = 15
+  const [lowerBound, setLowerBound] = useState(0)
+  const [upperBound, setUpperBound] = useState(increment)
   const typingTimeouts = useRef({})
 
   useEffect(() => {
     const fetchChatRoom = async () => {
       const chat = await getChat(ownerToken, uniqueChatID)
-      const chatMessages = await getChatRange(ownerToken, uniqueChatID, lowerBound, upperBound)
+      const chatMessages = await getChatRange(
+        ownerToken,
+        uniqueChatID,
+        lowerBound,
+        upperBound
+      )
       setChatRoom(chat)
       setMessages(chatMessages)
     }
@@ -122,7 +127,7 @@ export function ChatRoom() {
           stompClient={stompClient}
           userList={userList}
           userTypingList={userTypingList}
-          setMessages ={setMessages}
+          setMessages={setMessages}
           messages={messages}
           setLowerBound={setLowerBound}
           setUpperBound={setUpperBound}

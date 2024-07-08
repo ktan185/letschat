@@ -1,11 +1,10 @@
 import axios from 'axios'
 
-const SERVER_PORT = 'http://localhost:8080'
-
+const API_URL = process.env.REACT_APP_API_URL
 export const signIn = async (userDetails) => {
-  return await axios.post(`${SERVER_PORT}/api/signIn`, userDetails)
+  return await axios.post(`${API_URL}/api/signIn`, userDetails)
 }
 
 export const signUp = async (newUserDetails) => {
-  return await axios.post(`${SERVER_PORT}/api/signUp`, newUserDetails)
+  return await axios.post(`${API_URL}/api/signUp`, newUserDetails)
 }

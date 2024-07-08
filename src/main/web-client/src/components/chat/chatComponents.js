@@ -121,7 +121,7 @@ export function ChatRoomList({ chatlist }) {
   }
 
   const navigate = useNavigate()
-  const SERVER = 'http://localhost:8080'
+  const SERVER = process.env.REACT_APP_API_URL
 
   useEffect(() => {
     const subscriptions = chatlist.map((chat) => {

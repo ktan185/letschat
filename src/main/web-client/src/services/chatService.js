@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const SERVER_PORT = 'http://localhost:8080'
+const SERVER_PORT = process.env.REACT_APP_API_URL
 
 export const getAllChats = async () => {
   try {
@@ -22,7 +22,12 @@ export const getChat = async (ownerToken, uniqueChatID) => {
   }
 }
 
-export const getChatRange = async (ownerToken, uniqueChatID, lowerBound, upperBound) => {
+export const getChatRange = async (
+  ownerToken,
+  uniqueChatID,
+  lowerBound,
+  upperBound
+) => {
   try {
     const response = await axios.get(
       `${SERVER_PORT}/api/getChatMessageRange?ownerToken=${ownerToken}&uniqueChatID=${uniqueChatID}&lowerBoundInclusive=${lowerBound}&upperBoundExclusive=${upperBound}`
